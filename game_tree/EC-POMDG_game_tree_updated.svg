@@ -1,0 +1,131 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1456" viewBox="0 0 1440 1456">
+<rect x="0" y="0" width="1440" height="1456" rx="0" fill="#ffffff" stroke="#ffffff" stroke-width="0"/>
+<text x="720.0" y="40" font-family="Times New Roman, Georgia, serif" font-size="21" font-weight="bold" font-style="normal" fill="#111" text-anchor="middle">EC-POMDG stage-conditioned game tree — a defender decision at every kill-chain stage</text>
+<text x="720.0" y="64" font-family="Times New Roman, Georgia, serif" font-size="14" font-weight="normal" font-style="italic" fill="#555" text-anchor="middle">Representative path (cautious &amp; persistent share structure; parameters differ). Terminals show reward r_term.</text>
+<circle cx="780" cy="100" r="9" fill="#111"/>
+<text x="780" y="90" font-family="Times New Roman, Georgia, serif" font-size="14" font-weight="bold" font-style="normal" fill="#111" text-anchor="middle">Nature</text>
+<path d="M 780 109 L 190 150" fill="none" stroke="#555" stroke-width="1.6"/>
+<text x="430" y="118" font-family="Times New Roman, Georgia, serif" font-size="12.5" font-weight="normal" font-style="italic" fill="#1a4a8a" text-anchor="middle">no attacker  1−ρ = 0.5</text>
+<path d="M 780 109 L 780 196" fill="none" stroke="#555" stroke-width="1.6"/>
+<text x="960" y="150" font-family="Times New Roman, Georgia, serif" font-size="12.5" font-weight="normal" font-style="italic" fill="#1a4a8a" text-anchor="middle">attacker  ρ = 0.5  {cautious ρπ · persistent ρ(1−π)}</text>
+<rect x="70" y="150" width="210" height="60" rx="6" fill="#eef3fb" stroke="#2a5db0" stroke-width="1.6"/>
+<text x="175" y="176" font-family="Times New Roman, Georgia, serif" font-size="14.5" font-weight="bold" font-style="normal" fill="#111" text-anchor="middle">D₀ · MONITOR</text>
+<text x="175" y="196" font-family="Times New Roman, Georgia, serif" font-size="12" font-weight="italic" font-style="#555" fill="#111" text-anchor="middle">no decoy armed</text>
+<path d="M 175 210 L 175 244" fill="none" stroke="#555" stroke-width="1.6"/>
+<rect x="70" y="244" width="210" height="50" rx="6" fill="#eef1f4" stroke="#566573" stroke-width="1.6"/>
+<text x="175" y="266" font-family="Times New Roman, Georgia, serif" font-size="14" font-weight="bold" font-style="#566573" fill="#111" text-anchor="middle">NO_INCIDENT</text>
+<text x="175" y="284" font-family="Times New Roman, Georgia, serif" font-size="11.5" font-weight="normal" font-style="#555" fill="#111" text-anchor="middle">quiet ops (0)</text>
+<text x="175" y="320" font-family="Times New Roman, Georgia, serif" font-size="11" font-weight="normal" font-style="italic" fill="#777" text-anchor="middle">decoy armed on a quiet</text>
+<text x="175" y="334" font-family="Times New Roman, Georgia, serif" font-size="11" font-weight="normal" font-style="italic" fill="#777" text-anchor="middle">episode → WASTED_DEFENSE (−1)</text>
+<rect x="662.0" y="196" width="236" height="22" rx="4" fill="#eef0f3" stroke="#cfd4da" stroke-width="1"/>
+<text x="780" y="211" font-family="Times New Roman, Georgia, serif" font-size="12.5" font-weight="bold" font-style="normal" fill="#333" text-anchor="middle">STAGE 1 · RECONNAISSANCE</text>
+<rect x="662.0" y="226" width="236" height="66" rx="6" fill="#eef3fb" stroke="#2a5db0" stroke-width="1.6"/>
+<text x="780" y="254" font-family="Times New Roman, Georgia, serif" font-size="15.5" font-weight="bold" font-style="normal" fill="#111" text-anchor="middle">D1 · belief b(q)</text>
+<text x="780" y="274" font-family="Times New Roman, Georgia, serif" font-size="12.5" font-weight="italic" font-style="#555" fill="#111" text-anchor="middle">hidden stage q_rec</text>
+<path d="M 662.0 259 L 592 259" fill="none" stroke="#555" stroke-width="1.6"/>
+<text x="627.0" y="248" font-family="Times New Roman, Georgia, serif" font-size="12.5" font-weight="normal" font-style="italic" fill="#1a4a8a" text-anchor="middle">act</text>
+<rect x="330" y="232" width="262" height="52" rx="6" fill="#fff6e6" stroke="#b8860b" stroke-width="1.6"/>
+<text x="461.0" y="254" font-family="Times New Roman, Georgia, serif" font-size="13.5" font-weight="bold" font-style="#b8860b" fill="#111" text-anchor="middle">DECEPTIVE_SURFACE (−1)</text>
+<text x="461.0" y="272" font-family="Times New Roman, Georgia, serif" font-size="11" font-weight="normal" font-style="#777" fill="#111" text-anchor="middle">fake hosts / honeytokens</text>
+<path d="M 461.0 284 L 461.0 312" fill="none" stroke="#555" stroke-width="1.6"/>
+<rect x="330" y="312" width="262" height="44" rx="6" fill="#eef1f4" stroke="#566573" stroke-width="1.6"/>
+<text x="461.0" y="333" font-family="Times New Roman, Georgia, serif" font-size="13.5" font-weight="bold" font-style="#566573" fill="#111" text-anchor="middle">WITHDRAWN</text>
+<text x="461.0" y="350" font-family="Times New Roman, Georgia, serif" font-size="11" font-weight="normal" font-style="#555" fill="#111" text-anchor="middle">w₁ withdraw (0)</text>
+<text x="914.0" y="254" font-family="Times New Roman, Georgia, serif" font-size="12" font-weight="normal" font-style="italic" fill="#1a4a8a" text-anchor="start">MONITOR · advance</text>
+<text x="914.0" y="270" font-family="Times New Roman, Georgia, serif" font-size="11" font-weight="normal" font-style="italic" fill="#777" text-anchor="start">a  advance</text>
+<path d="M 780 292 L 780 372" fill="none" stroke="#555" stroke-width="1.6"/>
+<rect x="662.0" y="372" width="236" height="22" rx="4" fill="#eef0f3" stroke="#cfd4da" stroke-width="1"/>
+<text x="780" y="387" font-family="Times New Roman, Georgia, serif" font-size="12.5" font-weight="bold" font-style="normal" fill="#333" text-anchor="middle">STAGE 2 · ACCESS</text>
+<rect x="662.0" y="402" width="236" height="66" rx="6" fill="#eef3fb" stroke="#2a5db0" stroke-width="1.6"/>
+<text x="780" y="430" font-family="Times New Roman, Georgia, serif" font-size="15.5" font-weight="bold" font-style="normal" fill="#111" text-anchor="middle">D2 · belief b(q)</text>
+<text x="780" y="450" font-family="Times New Roman, Georgia, serif" font-size="12.5" font-weight="italic" font-style="#555" fill="#111" text-anchor="middle">hidden stage q_acc</text>
+<path d="M 662.0 435 L 592 435" fill="none" stroke="#555" stroke-width="1.6"/>
+<text x="627.0" y="424" font-family="Times New Roman, Georgia, serif" font-size="12.5" font-weight="normal" font-style="italic" fill="#1a4a8a" text-anchor="middle">act</text>
+<rect x="330" y="408" width="262" height="52" rx="6" fill="#fff6e6" stroke="#b8860b" stroke-width="1.6"/>
+<text x="461.0" y="430" font-family="Times New Roman, Georgia, serif" font-size="13.5" font-weight="bold" font-style="#b8860b" fill="#111" text-anchor="middle">ACTIVATE_DECOY (−1)</text>
+<text x="461.0" y="448" font-family="Times New Roman, Georgia, serif" font-size="11" font-weight="normal" font-style="#777" fill="#111" text-anchor="middle">arm decoy early · session challenge</text>
+<path d="M 461.0 460 L 461.0 488" fill="none" stroke="#555" stroke-width="1.6"/>
+<rect x="330" y="488" width="262" height="44" rx="6" fill="#eef1f4" stroke="#566573" stroke-width="1.6"/>
+<text x="461.0" y="509" font-family="Times New Roman, Georgia, serif" font-size="13.5" font-weight="bold" font-style="#566573" fill="#111" text-anchor="middle">WITHDRAWN</text>
+<text x="461.0" y="526" font-family="Times New Roman, Georgia, serif" font-size="11" font-weight="normal" font-style="#555" fill="#111" text-anchor="middle">w₂ withdraw (0)</text>
+<text x="914.0" y="430" font-family="Times New Roman, Georgia, serif" font-size="12" font-weight="normal" font-style="italic" fill="#1a4a8a" text-anchor="start">MONITOR · advance</text>
+<text x="914.0" y="446" font-family="Times New Roman, Georgia, serif" font-size="11" font-weight="normal" font-style="italic" fill="#777" text-anchor="start">a  advance</text>
+<path d="M 780 468 L 780 548" fill="none" stroke="#555" stroke-width="1.6"/>
+<rect x="662.0" y="548" width="236" height="22" rx="4" fill="#eef0f3" stroke="#cfd4da" stroke-width="1"/>
+<text x="780" y="563" font-family="Times New Roman, Georgia, serif" font-size="12.5" font-weight="bold" font-style="normal" fill="#333" text-anchor="middle">STAGE 3 · DER ENUMERATION</text>
+<rect x="662.0" y="578" width="236" height="66" rx="6" fill="#eef3fb" stroke="#2a5db0" stroke-width="1.6"/>
+<text x="780" y="606" font-family="Times New Roman, Georgia, serif" font-size="15.5" font-weight="bold" font-style="normal" fill="#111" text-anchor="middle">D3 · belief b(q)</text>
+<text x="780" y="626" font-family="Times New Roman, Georgia, serif" font-size="12.5" font-weight="italic" font-style="#555" fill="#111" text-anchor="middle">hidden stage q_enum</text>
+<path d="M 662.0 611 L 592 611" fill="none" stroke="#555" stroke-width="1.6"/>
+<text x="627.0" y="600" font-family="Times New Roman, Georgia, serif" font-size="12.5" font-weight="normal" font-style="italic" fill="#1a4a8a" text-anchor="middle">act</text>
+<rect x="330" y="584" width="262" height="52" rx="6" fill="#fff6e6" stroke="#b8860b" stroke-width="1.6"/>
+<text x="461.0" y="606" font-family="Times New Roman, Georgia, serif" font-size="13.5" font-weight="bold" font-style="#b8860b" fill="#111" text-anchor="middle">HONEY_POINTS (−1)</text>
+<text x="461.0" y="624" font-family="Times New Roman, Georgia, serif" font-size="11" font-weight="normal" font-style="#777" fill="#111" text-anchor="middle">decoy objects · +0.20 redirect boost</text>
+<text x="914.0" y="606" font-family="Times New Roman, Georgia, serif" font-size="12" font-weight="normal" font-style="italic" fill="#1a4a8a" text-anchor="start">MONITOR · advance</text>
+<text x="914.0" y="622" font-family="Times New Roman, Georgia, serif" font-size="11" font-weight="normal" font-style="italic" fill="#777" text-anchor="start">advance</text>
+<path d="M 780 644 L 780 724" fill="none" stroke="#555" stroke-width="1.6"/>
+<rect x="662.0" y="724" width="236" height="22" rx="4" fill="#eef0f3" stroke="#cfd4da" stroke-width="1"/>
+<text x="780" y="739" font-family="Times New Roman, Georgia, serif" font-size="12.5" font-weight="bold" font-style="normal" fill="#333" text-anchor="middle">STAGE 4 · CONTROL MANIPULATION</text>
+<rect x="662.0" y="754" width="236" height="66" rx="6" fill="#eef3fb" stroke="#2a5db0" stroke-width="1.6"/>
+<text x="780" y="782" font-family="Times New Roman, Georgia, serif" font-size="15.5" font-weight="bold" font-style="normal" fill="#111" text-anchor="middle">D4 · decoy armed?</text>
+<text x="780" y="802" font-family="Times New Roman, Georgia, serif" font-size="12.5" font-weight="italic" font-style="#555" fill="#111" text-anchor="middle">hidden stage q_ctrl</text>
+<path d="M 662.0 787 L 592 787" fill="none" stroke="#555" stroke-width="1.6"/>
+<rect x="330" y="760" width="262" height="52" rx="6" fill="#fff6e6" stroke="#b8860b" stroke-width="1.6"/>
+<text x="461.0" y="782" font-family="Times New Roman, Georgia, serif" font-size="14" font-weight="bold" font-style="#b8860b" fill="#111" text-anchor="middle">REDIRECT (−1)</text>
+<text x="461.0" y="800" font-family="Times New Roman, Georgia, serif" font-size="11" font-weight="normal" font-style="#777" fill="#111" text-anchor="middle">success p_r (+0.20 if honey)</text>
+<path d="M 461.0 812 L 461.0 840" fill="none" stroke="#555" stroke-width="1.6"/>
+<rect x="330" y="840" width="262" height="48" rx="6" fill="#eafaf0" stroke="#1e8449" stroke-width="1.6"/>
+<text x="461.0" y="862" font-family="Times New Roman, Georgia, serif" font-size="14" font-weight="bold" font-style="#1e8449" fill="#111" text-anchor="middle">DIVERTED_DECOY</text>
+<text x="461.0" y="880" font-family="Times New Roman, Georgia, serif" font-size="11" font-weight="normal" font-style="#555" fill="#111" text-anchor="middle">decoy controller (+12)</text>
+<text x="914.0" y="786" font-family="Times New Roman, Georgia, serif" font-size="12" font-weight="normal" font-style="italic" fill="#1a4a8a" text-anchor="start">redirect fails (1−p_r)</text>
+<path d="M 780 820 L 780 900" fill="none" stroke="#555" stroke-width="1.6"/>
+<rect x="662.0" y="900" width="236" height="22" rx="4" fill="#eef0f3" stroke="#cfd4da" stroke-width="1"/>
+<text x="780" y="915" font-family="Times New Roman, Georgia, serif" font-size="12.5" font-weight="bold" font-style="normal" fill="#333" text-anchor="middle">STAGE 5 · PHYSICAL IMPACT</text>
+<rect x="662.0" y="930" width="236" height="66" rx="6" fill="#eef3fb" stroke="#2a5db0" stroke-width="1.6"/>
+<text x="780" y="958" font-family="Times New Roman, Georgia, serif" font-size="15.5" font-weight="bold" font-style="normal" fill="#111" text-anchor="middle">D5 · target = REAL?</text>
+<text x="780" y="978" font-family="Times New Roman, Georgia, serif" font-size="12.5" font-weight="italic" font-style="#555" fill="#111" text-anchor="middle">containment net</text>
+<path d="M 662.0 963 L 592 963" fill="none" stroke="#555" stroke-width="1.6"/>
+<rect x="330" y="936" width="262" height="52" rx="6" fill="#fff6e6" stroke="#b8860b" stroke-width="1.6"/>
+<text x="461.0" y="958" font-family="Times New Roman, Georgia, serif" font-size="14" font-weight="bold" font-style="#b8860b" fill="#111" text-anchor="middle">CONTAIN (−2)</text>
+<text x="461.0" y="976" font-family="Times New Roman, Georgia, serif" font-size="11" font-weight="normal" font-style="#777" fill="#111" text-anchor="middle">well-timed → stop attack</text>
+<path d="M 461.0 988 L 461.0 1016" fill="none" stroke="#555" stroke-width="1.6"/>
+<rect x="330" y="1016" width="262" height="46" rx="6" fill="#eef1f4" stroke="#566573" stroke-width="1.6"/>
+<text x="461.0" y="1038" font-family="Times New Roman, Georgia, serif" font-size="14" font-weight="bold" font-style="#566573" fill="#111" text-anchor="middle">WITHDRAWN</text>
+<text x="461.0" y="1055" font-family="Times New Roman, Georgia, serif" font-size="11" font-weight="normal" font-style="#555" fill="#111" text-anchor="middle">attack halted (0)</text>
+<path d="M 898.0 963 L 930 963" fill="none" stroke="#555" stroke-width="1.6"/>
+<rect x="930" y="936" width="250" height="52" rx="6" fill="#fff6e6" stroke="#b8860b" stroke-width="1.6"/>
+<text x="1055.0" y="958" font-family="Times New Roman, Georgia, serif" font-size="13" font-weight="bold" font-style="#b8860b" fill="#111" text-anchor="middle">SAFETY_INTERLOCK (−2)</text>
+<text x="1055.0" y="976" font-family="Times New Roman, Georgia, serif" font-size="11" font-weight="normal" font-style="#777" fill="#111" text-anchor="middle">safety-instrumented trip</text>
+<path d="M 1055.0 988 L 990 1018" fill="none" stroke="#555" stroke-width="1.6"/>
+<text x="970" y="1008" font-family="Times New Roman, Georgia, serif" font-size="12.5" font-weight="normal" font-style="italic" fill="#1a4a8a" text-anchor="middle">0.9</text>
+<rect x="890" y="1018" width="150" height="46" rx="6" fill="#fef5e7" stroke="#b7791f" stroke-width="1.6"/>
+<text x="965" y="1039" font-family="Times New Roman, Georgia, serif" font-size="12.5" font-weight="bold" font-style="#b7791f" fill="#111" text-anchor="middle">CONTAINED_SAFE</text>
+<text x="965" y="1056" font-family="Times New Roman, Georgia, serif" font-size="11" font-weight="normal" font-style="#555" fill="#111" text-anchor="middle">(−10)</text>
+<path d="M 1055.0 988 L 1130 1018" fill="none" stroke="#555" stroke-width="1.6"/>
+<text x="1135" y="1008" font-family="Times New Roman, Georgia, serif" font-size="12.5" font-weight="normal" font-style="italic" fill="#1a4a8a" text-anchor="middle">0.1</text>
+<rect x="1080" y="1018" width="130" height="46" rx="6" fill="#fdecec" stroke="#c0392b" stroke-width="1.6"/>
+<text x="1145" y="1039" font-family="Times New Roman, Georgia, serif" font-size="11.5" font-weight="bold" font-style="#c0392b" fill="#111" text-anchor="middle">COMPROMISED</text>
+<text x="1145" y="1056" font-family="Times New Roman, Georgia, serif" font-size="11" font-weight="normal" font-style="#c0392b" fill="#111" text-anchor="middle">_REAL (−100)</text>
+<path d="M 780 996 L 780 1026" fill="none" stroke="#555" stroke-width="1.6"/>
+<rect x="660" y="1026" width="240" height="52" rx="6" fill="#fdecec" stroke="#c0392b" stroke-width="1.6"/>
+<text x="780" y="1050" font-family="Times New Roman, Georgia, serif" font-size="14.5" font-weight="bold" font-style="#c0392b" fill="#111" text-anchor="middle">COMPROMISED_REAL</text>
+<text x="780" y="1068" font-family="Times New Roman, Georgia, serif" font-size="11" font-weight="normal" font-style="#555" fill="#111" text-anchor="middle">real controller reached (−100)</text>
+<rect x="70" y="1112" width="1300" height="150" rx="8" fill="#fbfbfc" stroke="#cfd4da" stroke-width="1.2"/>
+<text x="86" y="1138" font-family="Times New Roman, Georgia, serif" font-size="15" font-weight="bold" font-style="normal" fill="#111" text-anchor="start">Parameters &amp; payoffs</text>
+<text x="86" y="1164" font-family="Times New Roman, Georgia, serif" font-size="12.5" font-weight="bold" font-style="normal" fill="#111" text-anchor="start">Advance prob.:</text>
+<text x="250" y="1164" font-family="Times New Roman, Georgia, serif" font-size="12.5" font-weight="normal" font-style="normal" fill="#111" text-anchor="start">a_C = 0.68 · a_P = 0.82</text>
+<text x="86" y="1188" font-family="Times New Roman, Georgia, serif" font-size="12.5" font-weight="bold" font-style="normal" fill="#111" text-anchor="start">Redirect success:</text>
+<text x="250" y="1188" font-family="Times New Roman, Georgia, serif" font-size="12.5" font-weight="normal" font-style="normal" fill="#111" text-anchor="start">p_r^C = 0.72 · p_r^P = 0.42 (+0.20 honey)</text>
+<text x="86" y="1212" font-family="Times New Roman, Georgia, serif" font-size="12.5" font-weight="bold" font-style="normal" fill="#111" text-anchor="start">Failed-redirect decay:</text>
+<text x="250" y="1212" font-family="Times New Roman, Georgia, serif" font-size="12.5" font-weight="normal" font-style="normal" fill="#111" text-anchor="start">× 0.60</text>
+<text x="86" y="1236" font-family="Times New Roman, Georgia, serif" font-size="12.5" font-weight="bold" font-style="normal" fill="#111" text-anchor="start">Budget / horizon:</text>
+<text x="250" y="1236" font-family="Times New Roman, Georgia, serif" font-size="12.5" font-weight="normal" font-style="normal" fill="#111" text-anchor="start">B = 4 (sweep 3–8) · 12 turns</text>
+<text x="726.0" y="1164" font-family="Times New Roman, Georgia, serif" font-size="12.5" font-weight="bold" font-style="normal" fill="#111" text-anchor="start">Action costs:</text>
+<text x="870.0" y="1164" font-family="Times New Roman, Georgia, serif" font-size="12.5" font-weight="normal" font-style="normal" fill="#111" text-anchor="start">MONITOR 0 · DECOY 1 · REDIRECT 1 · CONTAIN/INTERLOCK 2</text>
+<text x="726.0" y="1188" font-family="Times New Roman, Georgia, serif" font-size="12.5" font-weight="bold" font-style="normal" fill="#111" text-anchor="start">Terminal rewards:</text>
+<text x="870.0" y="1188" font-family="Times New Roman, Georgia, serif" font-size="12.5" font-weight="normal" font-style="normal" fill="#111" text-anchor="start">COMPROMISED_REAL −100 · DIVERTED_DECOY +12</text>
+<text x="726.0" y="1212" font-family="Times New Roman, Georgia, serif" font-size="12.5" font-weight="normal" font-style="normal" fill="#111" text-anchor="start">CONTAINED_SAFE −10 · WITHDRAWN / NO_INCIDENT 0</text>
+<text x="726.0" y="1236" font-family="Times New Roman, Georgia, serif" font-size="12.5" font-weight="bold" font-style="normal" fill="#111" text-anchor="start">Profiles:</text>
+<text x="870.0" y="1236" font-family="Times New Roman, Georgia, serif" font-size="12.5" font-weight="normal" font-style="normal" fill="#111" text-anchor="start">cautious θ_C (divertible) · persistent θ_P (resistant)</text>
+<text x="720.0" y="1438" font-family="Times New Roman, Georgia, serif" font-size="12.5" font-weight="normal" font-style="italic" fill="#777" text-anchor="middle">Stage-conditioned extension — RECON and ACCESS now carry defender decisions (previously pass-through).</text>
+</svg>

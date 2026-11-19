@@ -1,88 +1,101 @@
-# EC-POMDG — Evidence-Conditioned Partially-Observable Markov Deception Game
+# EC-POMDG: Knowledge-Guided Cyber Deception for IEC-104 Grid Control
 
-Knowledge-guided, game-theoretic cyber deception against multi-stage IEC-104 attacks
-on a power-grid ICS testbed (NOMS). This repository holds the code and results for the
-standalone experiments, the deployed engine, and the live SPHERE testbed run.
+This repository holds the code and results for EC-POMDG, a five-stage attacker-defender
+game for cyber deception in power-grid industrial control systems. The defender does not
+see the attacker's stage directly. It infers a belief over the five stages from IEC-104
+traffic, using observation likelihoods conditioned on three knowledge graphs
+(general cyber, ICS semantics, grid topology), and then decides when to arm a decoy,
+redirect a control command, or contain the session.
 
-## Are the results supportive?
+The experiments are run in three settings: a self-contained simulator, the deployed
+inference engine, and the SPHERE testbed with real IEC-104 controllers, an OpenDSS
+IEEE-13 feeder, and a Neo4j knowledge graph.
 
-**Yes — the core claims hold, with one honest sim-to-real gap.** Belief-adaptive
-defense beats stage-blind baselines; it is **uniquely robust to a deception-aware
-attacker** (N1) — confirmed on the authoritative engine, where belief-adaptive keeps
-**0.00 real-controller compromise** while a greedy early-arming policy collapses to
-86–95%. The **dynamic knowledge graph beats static on recurring attackers** (N2),
-confirmed on the real Neo4j store. **Physics-aware deception roughly halves voltage
-violations** (N3), and the advantage **scales to the official IEEE-123 feeder**. The
-one gap: the simulator's *cost-control* advantage for belief-adaptive did **not**
-transfer to the live H1 run — a sim-to-real finding that motivates live threshold
-calibration. A plain-language walkthrough is in [`docs/EXPLAINER.md`](docs/EXPLAINER.md).
+For a longer walkthrough of the game and the results in plain language, see
+`docs/EXPLAINER.md`.
 
-### Headline numbers
+## Results
 
-| Result | Finding |
-|---|---|
-| H1 — belief-adaptive defense | 0.00 compromise both profiles vs **18–81%** for stage-blind; reward +14.69 / +2.51 |
-| N1 — deception-aware attacker | belief-adaptive stays **0.00**; greedy early-arming collapses to **0.86 / 0.95** |
-| N2 — dynamic KG | recognizes returning attacker at turn 0; live Neo4j −0.19..−0.24 log-loss, 100% of pairs |
-| N3 — physics-aware (IEEE-13 / IEEE-123) | roughly halves voltage violations at every budget; advantage scales with feeder size |
-| Live SPHERE | 160 real-IEC-104 episodes, 0 failures; real-Neo4j KG ablation |
+**H1, belief-adaptive defense.** The belief-adaptive policy reaches 0.00 real-controller
+compromise against both the cautious and the persistent attacker, against 18-81% for the
+stage-blind policies. Its mean reward is +14.69 (cautious) and +2.51 (persistent).
 
-## Repository layout
+**N1, deception-aware attacker.** We add an attacker that detects and evades a decoy when
+it is armed on a fixed, early schedule. Under this attacker the greedy early-arming
+policy's compromise rate rises from 0.18 to 0.86 (cautious) and from 0.65 to 0.95
+(persistent). The belief-adaptive policy stays at 0.00, because it arms on evidence
+rather than on a schedule and keeps containment as a fallback. This is run on the
+deployed engine, which reproduces the base H1 table exactly in the no-evasion condition.
+
+**N2, dynamic knowledge graph.** A static knowledge graph is fixed once and never
+updated. The dynamic version keeps a per-campaign memory in Neo4j, so the belief filter
+recognizes a returning attacker on the first turn instead of re-inferring it. On the live
+Neo4j store the dynamic graph lowers log-loss by 0.19 to 0.24 over the static graph across
+every paired episode. The advantage disappears when the attacker never returns, which
+confirms it comes from recognizing repeat campaigns and not from anything else.
+
+**N3, physics-aware deception.** We couple the game to an OpenDSS load flow and let the
+defender spend its decoy budget on the DER buses whose voltage is most sensitive to a
+malicious setpoint, which is where a rational attacker aims. On the IEEE-13 feeder this
+cuts the voltage-violation rate by about half against a stage-blind defender at every
+budget. On the official IEEE-123 feeder (91 DER buses) the same pattern holds and the gap
+grows with budget: at budget 16 the physics-aware defender leaves 0.352 of attacks in
+violation against 0.692 for random placement.
+
+**Live SPHERE.** 160 episodes over real IEC-104 completed with no failures, and the decoy
+redirect is visible on the wire. One result did not carry over from simulation: the
+belief policy's lower spending on benign episodes did not appear live, where it armed as
+often as the fixed policy. That points to the decision thresholds needing calibration on
+live traffic, and is left as future work.
+
+## Layout
 
 ```
 .
-├── experiments/             # self-contained experiments (pure stdlib; OpenDSS for N3)
-│   ├── ecpomdg_standalone.py        # N1: 5-stage game, fixed + deception-aware attacker
-│   ├── n2_online_kg.py              # N2: online vs static vs oracle KG inference
-│   ├── n3_cyber_physical.py         # N3: linear feeder sensitivity
-│   ├── n3_opendss.py                # N3: real OpenDSS load flow (IEEE-13)
-│   ├── n3_ieee123.py                # N3 scaling: official IEEE-123 feeder
-│   ├── get_ieee123_feeder.sh        # fetches the IEEE-123 benchmark for n3_ieee123.py
-│   ├── run_n1_authoritative.py      # N1 on the authoritative ec_pomdg engine
-│   ├── iec104_testbed.py            # EC-POMDG over real IEC-104 frames (loopback)
+├── experiments/             # self-contained experiments (Python stdlib; OpenDSS for N3)
+│   ├── ecpomdg_standalone.py        # 5-stage game, fixed and deception-aware attacker
+│   ├── n2_online_kg.py              # online vs static vs oracle KG inference
+│   ├── n3_cyber_physical.py         # linear feeder sensitivity
+│   ├── n3_opendss.py                # OpenDSS load flow, IEEE-13
+│   ├── n3_ieee123.py                # OpenDSS load flow, IEEE-123 (scaling)
+│   ├── get_ieee123_feeder.sh        # fetches the IEEE-123 feeder for n3_ieee123.py
+│   ├── run_n1_authoritative.py      # N1 on the deployed ec_pomdg engine
+│   ├── iec104_testbed.py            # the game over real IEC-104 frames on loopback
 │   ├── stage_conditioned_policy.py, run_experiments_extended.py
 │   ├── STAGE_CONDITIONED_ENGINE_PATCH.md
-│   └── run_all_ec2.sh               # one-shot runner
+│   └── run_all_ec2.sh
 ├── sphere_engine/           # SPHERE deployment package
-│   ├── pipeline/            # 02_experiment_h1_live.py, 03_experiment_ablation.sh, run_experiments.py, ...
-│   ├── scripts/            # run_experiment_{h1,h2,replay,ablation}.py, run_all_offline.py
-│   ├── src/ecpomdg_final/   # game, dbn, policies, offline_kg, simulator, live/
-│   ├── kg_builders/        # general_cyber, power_grid_ics, component_topology, neo4j_migration
-│   ├── services/          # attacker, collector, controller_decoy
+│   ├── pipeline/            # testbed bring-up, live H1, ablation, run_experiments.py
+│   ├── scripts/             # offline H1/H2/replay/ablation runners
+│   ├── src/ecpomdg_final/   # inference, KG, policy, simulator code
+│   ├── kg_builders/         # the three knowledge-graph builders
+│   ├── services/            # attacker, collector, controller/decoy
 │   ├── sphere/, topology/, tests/, setup_patches/
 │   └── RUNBOOK_SPHERE.md, SPHERE_PIPELINE.md, RUNBOOK_REPRODUCE.md
 ├── results/
-│   ├── ec2/                # standalone CSVs (N1/N2/N3, iec104)
-│   └── sphere_live/        # live testbed results (H1 live, KG ablation, N1-engine, IEEE-123)
+│   ├── ec2/                 # simulator CSVs
+│   └── sphere_live/         # testbed results (H1 live, KG ablation, N1 engine, IEEE-123)
 └── docs/
-    └── EXPLAINER.md         # plain-language walkthrough of the game and results
+    └── EXPLAINER.md
 ```
 
-> The authoritative five-stage game engine (`ec_pomdg`, used by
-> `sphere_engine/pipeline/run_experiments.py` and `experiments/run_n1_authoritative.py`)
-> is deployed on the SPHERE testbed; the `ecpomdg_final` package in `sphere_engine/src`
-> is the inference/KG/policy codebase used for the offline and live-KG experiments.
+The five-stage game engine `ec_pomdg`, used by `sphere_engine/pipeline/run_experiments.py`
+and `experiments/run_n1_authoritative.py`, is deployed on the SPHERE testbed. The
+`ecpomdg_final` package in `sphere_engine/src` is the inference, KG, and policy code used
+for the offline and live-KG experiments.
 
-## Reproduce
+## Running the experiments
 
-### Standalone experiments (any machine, pure stdlib; OpenDSS optional)
+Simulator (any machine, Python stdlib; OpenDSS only for N3):
+
 ```bash
 cd experiments
-pip install --break-system-packages opendssdirect.py   # for n3_opendss.py / n3_ieee123.py
-bash run_all_ec2.sh                                     # N1, N2, N3, N3-OpenDSS, live IEC-104
-bash get_ieee123_feeder.sh && python3 n3_ieee123.py    # N3 scaling on IEEE-123
+pip install --break-system-packages opendssdirect.py   # for n3_opendss.py and n3_ieee123.py
+bash run_all_ec2.sh                                     # N1, N2, N3, OpenDSS, IEC-104
+bash get_ieee123_feeder.sh && python3 n3_ieee123.py    # IEEE-123 scaling run
 ```
 
-### Deployed engine + live SPHERE
-See `sphere_engine/RUNBOOK_SPHERE.md` and `sphere_engine/SPHERE_PIPELINE.md`.
-The live result files are in `results/sphere_live/`. The N1-on-engine result is
-reproduced with `experiments/run_n1_authoritative.py` on a node where the `ec_pomdg`
-package is importable (it reproduces the base H1 table exactly in the fixed condition).
-
-## Three tiers of evidence
-
-| Tier | What | Where | Headline |
-|---|---|---|---|
-| A. Standalone | calibrated 5-stage engine, N1/N2/N3 | any machine | belief-adaptive 0 compromise; N1 robustness; N3 OpenDSS |
-| B. Deployed engine | real inference/KG/policy code, synthetic traffic | EC2 / SPHERE XDC | belief-adaptive best utility; replay: dynamic ≫ static on recurring |
-| C. Live SPHERE | real IEC-104 + OpenDSS gridsim + Neo4j | testbed | live H1 (0 failures) + real-Neo4j KG ablation + N1-on-engine |
+Deployed engine and live testbed: follow `sphere_engine/RUNBOOK_SPHERE.md` and
+`sphere_engine/SPHERE_PIPELINE.md`. `experiments/run_n1_authoritative.py` reproduces the
+N1 result on a node where the `ec_pomdg` package is importable; in the no-evasion
+condition it returns the base H1 table.

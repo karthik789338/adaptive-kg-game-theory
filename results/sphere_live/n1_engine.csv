@@ -1,0 +1,17 @@
+attacker,profile,policy,diversion,withdrawn,compromise,mean_reward
+fixed,cautious,MONITOR_ONLY,0.00,0.00,1.00,-100.00
+fixed,cautious,FIXED_SCHEDULE,0.61,0.00,0.39,-25.48
+fixed,cautious,STAGE_AGNOSTIC,0.82,0.00,0.18,-1.40
+fixed,cautious,BELIEF_ADAPTIVE,0.61,0.39,0.00,14.69
+fixed,persistent,MONITOR_ONLY,0.00,0.00,1.00,-100.00
+fixed,persistent,FIXED_SCHEDULE,0.19,0.00,0.81,-80.92
+fixed,persistent,STAGE_AGNOSTIC,0.355,0.00,0.645,-61.85
+fixed,persistent,BELIEF_ADAPTIVE,0.19,0.81,0.00,2.51
+aware,cautious,MONITOR_ONLY,0.00,0.00,1.00,-100.00
+aware,cautious,FIXED_SCHEDULE,0.61,0.00,0.39,-25.48
+aware,cautious,STAGE_AGNOSTIC,0.14,0.00,0.86,-89.80
+aware,cautious,BELIEF_ADAPTIVE,0.61,0.39,0.00,14.69
+aware,persistent,MONITOR_ONLY,0.00,0.00,1.00,-100.00
+aware,persistent,FIXED_SCHEDULE,0.19,0.00,0.81,-80.92
+aware,persistent,STAGE_AGNOSTIC,0.05,0.00,0.95,-101.50
+aware,persistent,BELIEF_ADAPTIVE,0.19,0.81,0.00,2.51

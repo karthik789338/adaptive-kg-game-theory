@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "stages": ["RECON", "ACCESS", "DER_ENUM", "CONTROL", "IMPACT"],
+  "defender_actions": ["MONITOR", "ACTIVATE_DECOY", "REDIRECT", "CONTAIN"],
+  "knowledge_modes": ["TELEMETRY_ONLY", "STATIC_KG", "DYNAMIC_KG"],
+  "primary_h1_policies": ["FIXED_SCHEDULE", "STAGE_AGNOSTIC", "BELIEF_ADAPTIVE"],
+  "secondary_controls": ["MONITOR_ONLY"],
+  "attacker_profiles": ["CAUTIOUS", "PERSISTENT"],
+  "budgets": [4],
+  "seeds": {"start": 1, "stop_inclusive": 100},
+  "maximum_turns": 12,
+  "containment_duration_turns": 2,
+  "decision_order": "observe_then_belief_then_defender_then_attacker_transition",
+  "primary_h1_endpoint": "physical_impact_rate",
+  "secondary_h1_endpoints": ["real_compromise_rate", "decoy_diversion_rate", "mean_defense_cost", "mean_defender_utility"],
+  "primary_h2_endpoint": "stage_log_loss",
+  "secondary_h2_endpoints": ["stage_accuracy", "multiclass_brier", "target_accuracy", "decision_utility", "detection_lead_time_turns"]
+}

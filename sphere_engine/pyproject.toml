@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ecpomdg-final"
+version = "0.1.0"
+description = "Reproducible EC-POMDG five-stage cyber-physical defense experiments"
+requires-python = ">=3.10"
+dependencies = [
+  "numpy>=1.26,<3",
+  "pandas>=2.1,<3",
+  "networkx>=3,<4",
+  "neo4j>=6,<7",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]

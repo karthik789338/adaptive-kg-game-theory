@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "stage_order": ["RECON", "ACCESS", "DER_ENUM", "CONTROL", "IMPACT"],
+  "initial_prior": [0.80, 0.10, 0.06, 0.03, 0.01],
+  "laplace_alpha": 1.0,
+  "observation_features": [
+    "event_type",
+    "protocol_phase",
+    "target_role",
+    "physical_alarm",
+    "kg_stage_hint",
+    "kg_topology_risk",
+    "kg_path_continuity"
+  ]
+}

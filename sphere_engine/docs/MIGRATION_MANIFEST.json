@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "retained_files": [
+    {
+      "path": "services/controller_decoy/iec104_controller_decoy_service.py",
+      "sha256": "53214049e2b029b6a09ac913f9b12622e307822e652acc7c09738a78fb820686",
+      "origin": "current user EC-POMDG backup"
+    },
+    {
+      "path": "services/attacker/industroyer_inspired_iec104_emulator.py",
+      "sha256": "7455f7ac0d8e8801e402538d5e668abf4db73b9a184c9fccf2c9dc26750db498",
+      "origin": "current user EC-POMDG backup"
+    },
+    {
+      "path": "services/collector/telemetry_collector_service.py",
+      "sha256": "52ccd94f19464e42b3e32a04d76eed2a8d3d0838ed1558c3fd3f6da8d9edd1e2",
+      "origin": "current user EC-POMDG backup"
+    },
+    {
+      "path": "services/collector/telemetry_event_forwarder.py",
+      "sha256": "1e71bab9f5c4b15aaa3bf586e7e1d9ba8fc785bd6e2a9f08c8a35aa29b49942b",
+      "origin": "current user EC-POMDG backup"
+    },
+    {
+      "path": "services/collector/defender_trusted_asset_registry.json",
+      "sha256": "c31c610e601860af1264746e92da1bb084872cef50e9fbc85ac1162c22e2dd1a",
+      "origin": "current user EC-POMDG backup"
+    },
+    {
+      "path": "topology/sphere-testbed.py",
+      "sha256": "690a1b95f239f3723edb0a203dbb12172ed7bda07bd43201f89a1c691cf4c164",
+      "origin": "uploaded SPHERE topology"
+    },
+    {
+      "path": "kg_builders/general_cyber/build_general_cyber_knowledge_graph.py",
+      "sha256": "d9aff3dcc9fe23cfed948ddf885bdbae1d19ac7265c65564fc172e64567130c7",
+      "origin": "current user EC-POMDG backup"
+    },
+    {
+      "path": "kg_builders/power_grid_ics/build_power_grid_ics_cyber_knowledge_graph.py",
+      "sha256": "7c2fc34cafb94fd5df3f4353d88ec3c2992c2d3d4521eba84209d56d566088eb",
+      "origin": "current user EC-POMDG backup"
+    },
+    {
+      "path": "kg_builders/power_grid_ics/iec104_experiment_attack_mapping.json",
+      "sha256": "5ec1d73b07dfd4dd258ea745fbfd1937bdc485868fb931aee5ce5d0c277effcc",
+      "origin": "current user EC-POMDG backup"
+    },
+    {
+      "path": "kg_builders/component_topology/build_power_grid_component_topology_knowledge_graph.py",
+      "sha256": "e97aea8b6379794553026b040d64ee9e793e289d1caab54407431ffb478d36f4",
+      "origin": "current user EC-POMDG backup"
+    },
+    {
+      "path": "kg_builders/component_topology/capture_ieee13_physical_topology.py",
+      "sha256": "47981efe7a2f3700d26c05a9f11a268cc86e0e83be84670dcaf954049409cb00",
+      "origin": "current user EC-POMDG backup"
+    },
+    {
+      "path": "kg_builders/component_topology/sphere_cyber_physical_topology_manifest.json",
+      "sha256": "b63972e6145140758c20c33ea6c09fd223f0cb38cc7fa596139ba58766e9d62b",
+      "origin": "current user EC-POMDG backup"
+    },
+    {
+      "path": "kg_builders/neo4j_migration/import_frozen_knowledge_graphs_into_neo4j.py",
+      "sha256": "9ea29b3784069411a0de26299b7b460ec0857dd08c4fb5a08c7fbff3c6660ee9",
+      "origin": "current user EC-POMDG backup"
+    },
+    {
+      "path": "kg_builders/neo4j_migration/legacy_import_README.md",
+      "sha256": "355fdd8087da76644daf5202a61abe8b8e2adbf694ed259960cb7a37cd49ed45",
+      "origin": "current user EC-POMDG backup"
+    }
+  ]
+}

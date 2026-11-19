@@ -1,0 +1,6 @@
+# IEC-104 frame trace (one episode): dir typeID COT IOA
+TX  U          STARTDT_CON    0x0
+RX  100        6              0x0
+TX  100        7              0x0
+RX  50         6              0x4001
+TX  50         7              0x8001

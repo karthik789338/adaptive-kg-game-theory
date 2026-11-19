@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "scenario_id": "ecpomdg-industroyer-inspired-iec104",
+  "scenario_name": "EC-POMDG Industroyer-inspired IEC-104 Attack Emulation",
+  "protocol": {
+    "id": "protocol-iec-60870-5-104",
+    "name": "IEC 60870-5-104"
+  },
+  "behaviors": [
+    {
+      "id": "general-interrogation",
+      "name": "General Interrogation",
+      "attack_techniques": [
+        "T0801"
+      ]
+    },
+    {
+      "id": "process-state-monitoring",
+      "name": "Process State Monitoring",
+      "attack_techniques": [
+        "T0801"
+      ]
+    },
+    {
+      "id": "select-execute-command",
+      "name": "IEC-104 Select/Execute Command",
+      "attack_techniques": [
+        "T1692.001"
+      ]
+    },
+    {
+      "id": "active-power-setpoint-manipulation",
+      "name": "Active Power Setpoint Manipulation",
+      "attack_techniques": [
+        "T0836",
+        "T0831",
+        "T1692.001"
+      ]
+    },
+    {
+      "id": "reactive-power-setpoint-manipulation",
+      "name": "Reactive Power Setpoint Manipulation",
+      "attack_techniques": [
+        "T0836",
+        "T0831",
+        "T1692.001"
+      ]
+    }
+  ],
+  "control_points": [
+    {
+      "ioa": 100,
+      "quantity": "p_kw",
+      "name": "Active Power Setpoint"
+    },
+    {
+      "ioa": 101,
+      "quantity": "q_kvar",
+      "name": "Reactive Power Setpoint"
+    }
+  ],
+  "not_claimed_for_current_experiment": [
+    {
+      "attack_technique": "T0806",
+      "reason": "Current bounded emulator uses known IOAs and does not brute-force or enumerate an IOA range."
+    }
+  ]
+}

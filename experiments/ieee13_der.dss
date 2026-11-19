@@ -1,0 +1,20 @@
+
+Clear
+New Circuit.ieee13der basekv=4.16 phases=3 bus1=650 pu=1.0 R1=0.1 X1=0.5 R0=0.1 X0=0.5
+New Linecode.mtx nphases=3 R1=0.3 X1=0.6 R0=0.6 X0=1.2 units=mi
+New Line.650632  bus1=650  bus2=632  linecode=mtx length=2.0 units=mi
+New Line.632671  bus1=632  bus2=671  linecode=mtx length=2.0 units=mi
+New Line.671680  bus1=671  bus2=680  linecode=mtx length=1.0 units=mi
+New Line.632645  bus1=632  bus2=645  linecode=mtx length=0.5 units=mi
+New Line.671684  bus1=671  bus2=684  linecode=mtx length=0.3 units=mi
+New Line.684652  bus1=684  bus2=652  linecode=mtx length=0.8 units=mi
+New Line.671675  bus1=671  bus2=675  linecode=mtx length=1.6 units=mi
+New Load.L632 bus1=632 phases=3 kV=4.16 kW=200 kvar=120 model=1
+New Load.L671 bus1=671 phases=3 kV=4.16 kW=400 kvar=250 model=1
+New Load.L675 bus1=675 phases=3 kV=4.16 kW=300 kvar=180 model=1
+New Load.L680 bus1=680 phases=3 kV=4.16 kW=150 kvar=90  model=1
+New Load.L645 bus1=645 phases=3 kV=4.16 kW=170 kvar=100 model=1
+New Load.L684 bus1=684 phases=3 kV=4.16 kW=120 kvar=70  model=1
+New Load.L652 bus1=652 phases=3 kV=4.16 kW=140 kvar=85  model=1
+Set voltagebases=[4.16]
+Calcvoltagebases

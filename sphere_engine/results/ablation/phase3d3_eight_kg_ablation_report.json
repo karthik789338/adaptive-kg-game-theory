@@ -1,0 +1,1273 @@
+{
+  "H1_multistage_defense_efficacy": "NOT_ESTABLISHED_NO_ACTUAL_CLOSED_LOOP_INTERVENTION_COMPARISON",
+  "H2_incremental_KG_knowledge_contribution": "NOT_ESTABLISHED_SYNTHETIC_GRAPH_FACTS_EQUAL_INFORMATION_MATCHED_FLAT_FACTS",
+  "important_restrictions": [
+    "Static ontology coverage is not an independent sensor.",
+    "Dynamic synthetic policy membership is case-local and not externally trusted.",
+    "General Cyber KG has zero validated event-specific links.",
+    "Synthetic six-state simulator NORMAL and P/Q semantics differ from frozen five-stage game.",
+    "Physical observations are toy proxies and no real EXECUTE is sent.",
+    "Offline alarm flags are descriptive proxies and do not influence a defender game policy.",
+    "The original 3D.2C research calibration gate remains blocked."
+  ],
+  "model": "six_state_HMM_with_validation_temperature; simulated data only",
+  "negative_control": {
+    "general_cyber_event_specific_links": 0,
+    "graph_feature_info_parity_flat_policy": "EXACT_ALL_795",
+    "graph_only_predictive_advantage_supported": false,
+    "graph_representation_gain_over_information_matched_flattened_baseline": 0.0,
+    "permission_counts_in_Neo4j": {
+      "False": 200,
+      "None": 90,
+      "True": 505
+    },
+    "scope": "synthetic as-of permission lookup, not independently measured policy knowledge"
+  },
+  "non_KG_baselines": {
+    "RAW_PLUS_FLATTENED_POLICY": {
+      "name": "RAW_PLUS_FLATTENED_POLICY",
+      "not_a_closed_loop_defender": true,
+      "origin": "SYNTHETIC_90_EPISODE_SIDECAR",
+      "temperature_validation_selected": 3.0,
+      "test_metrics": {
+        "boundaries": 280,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 1.0007185624164083,
+        "multiclass_brier": 0.5314881681657719,
+        "stage_accuracy": 0.6607142857142857
+      },
+      "validation_metrics": {
+        "boundaries": 265,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 1.1279750639409434,
+        "multiclass_brier": 0.5934287994931257,
+        "stage_accuracy": 0.6226415094339622
+      }
+    },
+    "RAW_PLUS_QUANTITY": {
+      "name": "RAW_PLUS_QUANTITY",
+      "not_a_closed_loop_defender": true,
+      "origin": "SYNTHETIC_90_EPISODE_SIDECAR",
+      "temperature_validation_selected": 3.0,
+      "test_metrics": {
+        "boundaries": 280,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 0.9423180876487071,
+        "multiclass_brier": 0.5104318727747076,
+        "stage_accuracy": 0.6607142857142857
+      },
+      "validation_metrics": {
+        "boundaries": 265,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 1.0443019215088598,
+        "multiclass_brier": 0.572217557487862,
+        "stage_accuracy": 0.6226415094339622
+      }
+    },
+    "RAW_PROTOCOL": {
+      "name": "RAW_PROTOCOL",
+      "not_a_closed_loop_defender": true,
+      "origin": "SYNTHETIC_90_EPISODE_SIDECAR",
+      "temperature_validation_selected": 3.0,
+      "test_metrics": {
+        "boundaries": 280,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 1.046447294344035,
+        "multiclass_brier": 0.5472873992531696,
+        "stage_accuracy": 0.625
+      },
+      "validation_metrics": {
+        "boundaries": 265,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 1.1273824834968889,
+        "multiclass_brier": 0.5914748367685407,
+        "stage_accuracy": 0.6037735849056604
+      }
+    }
+  },
+  "non_KG_paired_family_uncertainty": {
+    "RAW_PLUS_FLATTENED_POLICY_VS_RAW_PROTOCOL": {
+      "cluster_count": 6,
+      "family_diagnostics_evaluator_only": {
+        "late_operator_p_maintenance": {
+          "boundaries": 50,
+          "delta_improvement": {
+            "log_loss": -0.06397842086519281,
+            "multiclass_brier": -0.13301702276994512,
+            "stage_accuracy": -0.0
+          }
+        },
+        "long_delay_compromised_p_attempt": {
+          "boundaries": 50,
+          "delta_improvement": {
+            "log_loss": 0.28651780815398253,
+            "multiclass_brier": 0.15467189258366199,
+            "stage_accuracy": 0.1
+          }
+        },
+        "long_delay_unauthorized_q_attempt": {
+          "boundaries": 50,
+          "delta_improvement": {
+            "log_loss": 0.3832996140606034,
+            "multiclass_brier": 0.20916886510589014,
+            "stage_accuracy": 0.1
+          }
+        },
+        "missing_voltage_credentialed_p": {
+          "boundaries": 45,
+          "delta_improvement": {
+            "log_loss": 0.20892827093427024,
+            "multiclass_brier": 0.10829092335612714,
+            "stage_accuracy": -0.0
+          }
+        },
+        "retrial_credentialed_q": {
+          "boundaries": 40,
+          "delta_improvement": {
+            "log_loss": 0.1514484390358457,
+            "multiclass_brier": 0.07119391927818416,
+            "stage_accuracy": -0.0
+          }
+        },
+        "revoked_operator_q_safe_stop": {
+          "boundaries": 45,
+          "delta_improvement": {
+            "log_loss": -0.7321692195824477,
+            "multiclass_brier": -0.32973889697026865,
+            "stage_accuracy": -0.0
+          }
+        }
+      },
+      "fraction_of_test_families_improved": {
+        "log_loss": 0.6666666666666666,
+        "multiclass_brier": 0.6666666666666666,
+        "stage_accuracy": 0.3333333333333333
+      },
+      "method": "paired_cluster_bootstrap_resample_complete_test_scenario_families",
+      "not_a_real_world_statistical_generalization_claim": true,
+      "percentile_95_interval": {
+        "log_loss": [
+          -0.27969322531124574,
+          0.2846426795641473
+        ],
+        "multiclass_brier": [
+          -0.14446710177114777,
+          0.152523399487869
+        ],
+        "stage_accuracy": [
+          0.0,
+          0.07017543859649122
+        ]
+      },
+      "point_improvement": {
+        "log_loss": 0.04572873192762676,
+        "multiclass_brier": 0.01579923108739767,
+        "stage_accuracy": 0.03571428571428571
+      },
+      "positive_is_contextual_improvement": true,
+      "resamples": 4000,
+      "seed": 2032
+    },
+    "RAW_PLUS_QUANTITY_VS_RAW_PROTOCOL": {
+      "cluster_count": 6,
+      "family_diagnostics_evaluator_only": {
+        "late_operator_p_maintenance": {
+          "boundaries": 50,
+          "delta_improvement": {
+            "log_loss": -0.07328802564649922,
+            "multiclass_brier": -0.10969396513851704,
+            "stage_accuracy": -0.0
+          }
+        },
+        "long_delay_compromised_p_attempt": {
+          "boundaries": 50,
+          "delta_improvement": {
+            "log_loss": 0.2509853535023901,
+            "multiclass_brier": 0.1458730311082598,
+            "stage_accuracy": 0.1
+          }
+        },
+        "long_delay_unauthorized_q_attempt": {
+          "boundaries": 50,
+          "delta_improvement": {
+            "log_loss": 0.2509853535023901,
+            "multiclass_brier": 0.1458730311082598,
+            "stage_accuracy": 0.1
+          }
+        },
+        "missing_voltage_credentialed_p": {
+          "boundaries": 45,
+          "delta_improvement": {
+            "log_loss": 0.17364454351761213,
+            "multiclass_brier": 0.09835837591246657,
+            "stage_accuracy": -0.0
+          }
+        },
+        "retrial_credentialed_q": {
+          "boundaries": 40,
+          "delta_improvement": {
+            "log_loss": 0.11913450898473268,
+            "multiclass_brier": 0.06266209558358446,
+            "stage_accuracy": -0.0
+          }
+        },
+        "revoked_operator_q_safe_stop": {
+          "boundaries": 45,
+          "delta_improvement": {
+            "log_loss": -0.10794091135341684,
+            "multiclass_brier": -0.1270148484296686,
+            "stage_accuracy": -0.0
+          }
+        }
+      },
+      "fraction_of_test_families_improved": {
+        "log_loss": 0.6666666666666666,
+        "multiclass_brier": 0.6666666666666666,
+        "stage_accuracy": 0.3333333333333333
+      },
+      "method": "paired_cluster_bootstrap_resample_complete_test_scenario_families",
+      "not_a_real_world_statistical_generalization_claim": true,
+      "percentile_95_interval": {
+        "log_loss": [
+          -0.019285200847100954,
+          0.21435023298328473
+        ],
+        "multiclass_brier": [
+          -0.05814478539083977,
+          0.12336608917341038
+        ],
+        "stage_accuracy": [
+          0.0,
+          0.07017543859649122
+        ]
+      },
+      "point_improvement": {
+        "log_loss": 0.10412920669532909,
+        "multiclass_brier": 0.03685552647846221,
+        "stage_accuracy": 0.03571428571428571
+      },
+      "positive_is_contextual_improvement": true,
+      "resamples": 4000,
+      "seed": 2032
+    }
+  },
+  "phase": "3D.3",
+  "population": {
+    "boundaries": 795,
+    "episodes": 90,
+    "stage_classes": [
+      "NORMAL",
+      "RECONNAISSANCE",
+      "ACCESS",
+      "DER_ENUMERATION",
+      "CONTROL_MANIPULATION",
+      "PHYSICAL_IMPACT"
+    ],
+    "test_boundaries": 280,
+    "test_episodes": 30,
+    "test_families": 6
+  },
+  "provenance": {
+    "all_neo4j_facts_are_simulation_only": true,
+    "frozen_3d2c_import_sha256": "ed1ca1f1094ba40c0138c8e70acf20903d90a3d769e654ca898b1dd5bde30691",
+    "frozen_game_archive": "/home/ka9d9/ecpomdg_audit/dynamic_knowledge_graph/calibration_readiness/contextual_frozen_game_semantic_coupling/contextual_frozen_game_semantic_coupling_20261015T020523510239Z",
+    "neo4j_readback": "/home/ka9d9/ecpomdg_audit/dynamic_knowledge_graph/calibration_readiness/phase3d3_neo4j_verified_input/phase3d2c_795_boundary_neo4j_synthetic_asof_43b225bf2159274b.jsonl",
+    "neo4j_readback_sha256": "77fe7556001fd538759a444dcfec05737979dd2e324d7a9aa2c04f8805b914b0",
+    "oracle_free_bundle_manifest_sha256": "43b225bf2159274b89d1e050a43e01835f1e6e77b94373b01c050011401d2cbf",
+    "source_archive": "/home/ka9d9/ecpomdg_audit/dynamic_knowledge_graph/calibration_readiness/contextual_protocol_plant_sidecar/contextual_protocol_plant_20261015T015426349388Z",
+    "source_manifest_sha256": "d0b03b87d84b1785b876f63f1343878d12ba725c3768eaee52c41889197c194a"
+  },
+  "raw_plus_quantity_baseline": {
+    "name": "RAW_PLUS_QUANTITY",
+    "not_a_closed_loop_defender": true,
+    "origin": "SYNTHETIC_90_EPISODE_SIDECAR",
+    "temperature_validation_selected": 3.0,
+    "test_metrics": {
+      "boundaries": 280,
+      "episodes": 30,
+      "families": 6,
+      "log_loss": 0.9423180876487071,
+      "multiclass_brier": 0.5104318727747076,
+      "stage_accuracy": 0.6607142857142857
+    },
+    "validation_metrics": {
+      "boundaries": 265,
+      "episodes": 30,
+      "families": 6,
+      "log_loss": 1.0443019215088598,
+      "multiclass_brier": 0.572217557487862,
+      "stage_accuracy": 0.6226415094339622
+    }
+  },
+  "release_gates": {
+    "all_eight_kg_masks_evaluated_on_identical_heldout_scenarios": true,
+    "calibrated_defender_makes_closed_loop_multistage_game_actions": false,
+    "causal_H1_defense_benefit_demonstrated": false,
+    "causal_H2_knowledge_graph_specific_gain_demonstrated": false,
+    "independent_general_cyber_event_specific_signal": false,
+    "independent_kg_context_beyond_flat_facts": false,
+    "information_matched_flattened_policy_feature_parity": true,
+    "opendss_realistic_physical_validation": false,
+    "source_and_frozen_replay_archives_sha256_valid": true,
+    "stage_semantics_and_p_q_matched_to_frozen_game": false,
+    "verified_795_boundary_neo4j_synthetic_asof_readback": true
+  },
+  "replay_diagnostics": {
+    "attack_boundaries": 530,
+    "p_q_distinction_in_frozen_game": false,
+    "reached_boundaries": 470,
+    "semantic_equivalence_verified": false,
+    "source_manifest_sha256": "bad84bc30f893df08439c8fc3be921a458448f24c0ad931895e56d57f4118846",
+    "stage_agreement_on_reached": 0.851063829787234,
+    "stage_confusion": {
+      "ACCESS -> ACCESS": 60,
+      "ACCESS -> RECONNAISSANCE": 60,
+      "CONTROL_MANIPULATION -> CONTROL_MANIPULATION": 60,
+      "CONTROL_MANIPULATION -> PHYSICAL_IMPACT": 10,
+      "DER_ENUMERATION -> DER_ENUMERATION": 110,
+      "PHYSICAL_IMPACT -> PHYSICAL_IMPACT": 110,
+      "RECONNAISSANCE -> RECONNAISSANCE": 60
+    },
+    "stage_name_matches": 400,
+    "target_agreement_on_reached": 0.6914893617021277,
+    "target_name_matches": 325,
+    "unreached_after_terminal": 60
+  },
+  "results_all_eight_masks_static_and_synthetic_dynamic": [
+    {
+      "family_cluster_95_interval_improvement": {
+        "log_loss": [
+          0.0,
+          0.0
+        ],
+        "multiclass_brier": [
+          0.0,
+          0.0
+        ],
+        "stage_accuracy": [
+          0.0,
+          0.0
+        ]
+      },
+      "identical_token_signature_to": null,
+      "kg_equals_information_matched_flat_all_795_boundaries": true,
+      "mask": "NONE",
+      "offline_alarm_proxy": {
+        "attack_boundary_recall_simulation_only": 1.0,
+        "benign_boundary_false_positive_rate_simulation_only": 1.0,
+        "fixed_threshold": 0.5,
+        "not_H1_effectiveness_evidence": true,
+        "not_actual_defender_actions": true
+      },
+      "overlay": "STATIC",
+      "point_improvement_over_raw_plus_quantity": {
+        "log_loss": 0.0,
+        "multiclass_brier": 0.0,
+        "stage_accuracy": 0.0
+      },
+      "synthetic_overlay_is_independently_trusted": false,
+      "temperature_validation_selected": 3.0,
+      "test_families_improved_fraction": {
+        "log_loss": 0.0,
+        "multiclass_brier": 0.0,
+        "stage_accuracy": 0.0
+      },
+      "test_metrics": {
+        "boundaries": 280,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 0.9423180876487071,
+        "multiclass_brier": 0.5104318727747076,
+        "stage_accuracy": 0.6607142857142857
+      },
+      "token_sha256": "575de00bd6ba3d9e4744e25b6aa598c2b5c9d6550e570f92f391ab246a3609af",
+      "validation_metrics": {
+        "boundaries": 265,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 1.0443019215088598,
+        "multiclass_brier": 0.572217557487862,
+        "stage_accuracy": 0.6226415094339622
+      }
+    },
+    {
+      "family_cluster_95_interval_improvement": {
+        "log_loss": [
+          0.0,
+          0.0
+        ],
+        "multiclass_brier": [
+          0.0,
+          0.0
+        ],
+        "stage_accuracy": [
+          0.0,
+          0.0
+        ]
+      },
+      "identical_token_signature_to": "STATIC:NONE",
+      "kg_equals_information_matched_flat_all_795_boundaries": true,
+      "mask": "G_ONLY",
+      "name": "STATIC:NONE",
+      "not_a_closed_loop_defender": true,
+      "offline_alarm_proxy": {
+        "attack_boundary_recall_simulation_only": 1.0,
+        "benign_boundary_false_positive_rate_simulation_only": 1.0,
+        "fixed_threshold": 0.5,
+        "not_H1_effectiveness_evidence": true,
+        "not_actual_defender_actions": true
+      },
+      "origin": "SYNTHETIC_90_EPISODE_SIDECAR",
+      "overlay": "STATIC",
+      "point_improvement_over_raw_plus_quantity": {
+        "log_loss": 0.0,
+        "multiclass_brier": 0.0,
+        "stage_accuracy": 0.0
+      },
+      "synthetic_overlay_is_independently_trusted": false,
+      "temperature_validation_selected": 3.0,
+      "test_families_improved_fraction": {
+        "log_loss": 0.0,
+        "multiclass_brier": 0.0,
+        "stage_accuracy": 0.0
+      },
+      "test_metrics": {
+        "boundaries": 280,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 0.9423180876487071,
+        "multiclass_brier": 0.5104318727747076,
+        "stage_accuracy": 0.6607142857142857
+      },
+      "token_sha256": "575de00bd6ba3d9e4744e25b6aa598c2b5c9d6550e570f92f391ab246a3609af",
+      "validation_metrics": {
+        "boundaries": 265,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 1.0443019215088598,
+        "multiclass_brier": 0.572217557487862,
+        "stage_accuracy": 0.6226415094339622
+      }
+    },
+    {
+      "family_cluster_95_interval_improvement": {
+        "log_loss": [
+          -0.0008503137260659815,
+          0.04555239952719862
+        ],
+        "multiclass_brier": [
+          -0.014551817142065557,
+          0.009317942783976014
+        ],
+        "stage_accuracy": [
+          0.0,
+          0.0
+        ]
+      },
+      "identical_token_signature_to": null,
+      "kg_equals_information_matched_flat_all_795_boundaries": true,
+      "mask": "I_ONLY",
+      "offline_alarm_proxy": {
+        "attack_boundary_recall_simulation_only": 1.0,
+        "benign_boundary_false_positive_rate_simulation_only": 1.0,
+        "fixed_threshold": 0.5,
+        "not_H1_effectiveness_evidence": true,
+        "not_actual_defender_actions": true
+      },
+      "overlay": "STATIC",
+      "point_improvement_over_raw_plus_quantity": {
+        "log_loss": 0.02011269145663816,
+        "multiclass_brier": -0.00282292757512128,
+        "stage_accuracy": 0.0
+      },
+      "synthetic_overlay_is_independently_trusted": false,
+      "temperature_validation_selected": 3.0,
+      "test_families_improved_fraction": {
+        "log_loss": 0.6666666666666666,
+        "multiclass_brier": 0.5,
+        "stage_accuracy": 0.0
+      },
+      "test_metrics": {
+        "boundaries": 280,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 0.9222053961920688,
+        "multiclass_brier": 0.5132548003498286,
+        "stage_accuracy": 0.6607142857142857
+      },
+      "token_sha256": "2368ff1bdec6065188f021c31e9c73412c40c54e1d4e34b54a4f058c6bb40db6",
+      "validation_metrics": {
+        "boundaries": 265,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 1.0662109264036688,
+        "multiclass_brier": 0.5877104207457967,
+        "stage_accuracy": 0.6226415094339622
+      }
+    },
+    {
+      "family_cluster_95_interval_improvement": {
+        "log_loss": [
+          -0.03740226218551606,
+          0.03931553719743544
+        ],
+        "multiclass_brier": [
+          -0.033854240996340844,
+          0.017082136730689184
+        ],
+        "stage_accuracy": [
+          0.0,
+          0.0
+        ]
+      },
+      "identical_token_signature_to": null,
+      "kg_equals_information_matched_flat_all_795_boundaries": true,
+      "mask": "T_ONLY",
+      "offline_alarm_proxy": {
+        "attack_boundary_recall_simulation_only": 1.0,
+        "benign_boundary_false_positive_rate_simulation_only": 1.0,
+        "fixed_threshold": 0.5,
+        "not_H1_effectiveness_evidence": true,
+        "not_actual_defender_actions": true
+      },
+      "overlay": "STATIC",
+      "point_improvement_over_raw_plus_quantity": {
+        "log_loss": 0.0017816027219075237,
+        "multiclass_brier": -0.007858186018105643,
+        "stage_accuracy": 0.0
+      },
+      "synthetic_overlay_is_independently_trusted": false,
+      "temperature_validation_selected": 3.0,
+      "test_families_improved_fraction": {
+        "log_loss": 0.6666666666666666,
+        "multiclass_brier": 0.6666666666666666,
+        "stage_accuracy": 0.0
+      },
+      "test_metrics": {
+        "boundaries": 280,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 0.9405364849267995,
+        "multiclass_brier": 0.5182900587928131,
+        "stage_accuracy": 0.6607142857142857
+      },
+      "token_sha256": "a9396db42007d9aebbdf6343cb057bc072fd74fa4bfc268fe50ad71afd29fab7",
+      "validation_metrics": {
+        "boundaries": 265,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 1.0438665846587967,
+        "multiclass_brier": 0.581532184719152,
+        "stage_accuracy": 0.6226415094339622
+      }
+    },
+    {
+      "family_cluster_95_interval_improvement": {
+        "log_loss": [
+          -0.0008503137260659815,
+          0.04555239952719862
+        ],
+        "multiclass_brier": [
+          -0.014551817142065557,
+          0.009317942783976014
+        ],
+        "stage_accuracy": [
+          0.0,
+          0.0
+        ]
+      },
+      "identical_token_signature_to": "STATIC:I_ONLY",
+      "kg_equals_information_matched_flat_all_795_boundaries": true,
+      "mask": "G_I",
+      "name": "STATIC:I_ONLY",
+      "not_a_closed_loop_defender": true,
+      "offline_alarm_proxy": {
+        "attack_boundary_recall_simulation_only": 1.0,
+        "benign_boundary_false_positive_rate_simulation_only": 1.0,
+        "fixed_threshold": 0.5,
+        "not_H1_effectiveness_evidence": true,
+        "not_actual_defender_actions": true
+      },
+      "origin": "SYNTHETIC_90_EPISODE_SIDECAR",
+      "overlay": "STATIC",
+      "point_improvement_over_raw_plus_quantity": {
+        "log_loss": 0.02011269145663816,
+        "multiclass_brier": -0.00282292757512128,
+        "stage_accuracy": 0.0
+      },
+      "synthetic_overlay_is_independently_trusted": false,
+      "temperature_validation_selected": 3.0,
+      "test_families_improved_fraction": {
+        "log_loss": 0.6666666666666666,
+        "multiclass_brier": 0.5,
+        "stage_accuracy": 0.0
+      },
+      "test_metrics": {
+        "boundaries": 280,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 0.9222053961920688,
+        "multiclass_brier": 0.5132548003498286,
+        "stage_accuracy": 0.6607142857142857
+      },
+      "token_sha256": "2368ff1bdec6065188f021c31e9c73412c40c54e1d4e34b54a4f058c6bb40db6",
+      "validation_metrics": {
+        "boundaries": 265,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 1.0662109264036688,
+        "multiclass_brier": 0.5877104207457967,
+        "stage_accuracy": 0.6226415094339622
+      }
+    },
+    {
+      "family_cluster_95_interval_improvement": {
+        "log_loss": [
+          -0.03740226218551606,
+          0.03931553719743544
+        ],
+        "multiclass_brier": [
+          -0.033854240996340844,
+          0.017082136730689184
+        ],
+        "stage_accuracy": [
+          0.0,
+          0.0
+        ]
+      },
+      "identical_token_signature_to": "STATIC:T_ONLY",
+      "kg_equals_information_matched_flat_all_795_boundaries": true,
+      "mask": "G_T",
+      "name": "STATIC:T_ONLY",
+      "not_a_closed_loop_defender": true,
+      "offline_alarm_proxy": {
+        "attack_boundary_recall_simulation_only": 1.0,
+        "benign_boundary_false_positive_rate_simulation_only": 1.0,
+        "fixed_threshold": 0.5,
+        "not_H1_effectiveness_evidence": true,
+        "not_actual_defender_actions": true
+      },
+      "origin": "SYNTHETIC_90_EPISODE_SIDECAR",
+      "overlay": "STATIC",
+      "point_improvement_over_raw_plus_quantity": {
+        "log_loss": 0.0017816027219075237,
+        "multiclass_brier": -0.007858186018105643,
+        "stage_accuracy": 0.0
+      },
+      "synthetic_overlay_is_independently_trusted": false,
+      "temperature_validation_selected": 3.0,
+      "test_families_improved_fraction": {
+        "log_loss": 0.6666666666666666,
+        "multiclass_brier": 0.6666666666666666,
+        "stage_accuracy": 0.0
+      },
+      "test_metrics": {
+        "boundaries": 280,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 0.9405364849267995,
+        "multiclass_brier": 0.5182900587928131,
+        "stage_accuracy": 0.6607142857142857
+      },
+      "token_sha256": "a9396db42007d9aebbdf6343cb057bc072fd74fa4bfc268fe50ad71afd29fab7",
+      "validation_metrics": {
+        "boundaries": 265,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 1.0438665846587967,
+        "multiclass_brier": 0.581532184719152,
+        "stage_accuracy": 0.6226415094339622
+      }
+    },
+    {
+      "family_cluster_95_interval_improvement": {
+        "log_loss": [
+          -0.034386472377031276,
+          0.048598822281124145
+        ],
+        "multiclass_brier": [
+          -0.0498102770983558,
+          0.005575238826523736
+        ],
+        "stage_accuracy": [
+          -0.07017543859649122,
+          0.037037037037037035
+        ]
+      },
+      "identical_token_signature_to": null,
+      "kg_equals_information_matched_flat_all_795_boundaries": true,
+      "mask": "I_T",
+      "offline_alarm_proxy": {
+        "attack_boundary_recall_simulation_only": 1.0,
+        "benign_boundary_false_positive_rate_simulation_only": 1.0,
+        "fixed_threshold": 0.5,
+        "not_H1_effectiveness_evidence": true,
+        "not_actual_defender_actions": true
+      },
+      "overlay": "STATIC",
+      "point_improvement_over_raw_plus_quantity": {
+        "log_loss": 0.008283750212208806,
+        "multiclass_brier": -0.02131087137780406,
+        "stage_accuracy": -0.017857142857142856
+      },
+      "synthetic_overlay_is_independently_trusted": false,
+      "temperature_validation_selected": 3.0,
+      "test_families_improved_fraction": {
+        "log_loss": 0.5,
+        "multiclass_brier": 0.5,
+        "stage_accuracy": 0.16666666666666666
+      },
+      "test_metrics": {
+        "boundaries": 280,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 0.9340343374364989,
+        "multiclass_brier": 0.5317427441525118,
+        "stage_accuracy": 0.6428571428571429
+      },
+      "token_sha256": "f68755c26fb62f1f0b650a5c537a8d1715341e0ca85f88c0e678baae93e3ac6d",
+      "validation_metrics": {
+        "boundaries": 265,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 1.1103349376550358,
+        "multiclass_brier": 0.6121018372311362,
+        "stage_accuracy": 0.6037735849056604
+      }
+    },
+    {
+      "family_cluster_95_interval_improvement": {
+        "log_loss": [
+          -0.034386472377031276,
+          0.048598822281124145
+        ],
+        "multiclass_brier": [
+          -0.0498102770983558,
+          0.005575238826523736
+        ],
+        "stage_accuracy": [
+          -0.07017543859649122,
+          0.037037037037037035
+        ]
+      },
+      "identical_token_signature_to": "STATIC:I_T",
+      "kg_equals_information_matched_flat_all_795_boundaries": true,
+      "mask": "G_I_T",
+      "name": "STATIC:I_T",
+      "not_a_closed_loop_defender": true,
+      "offline_alarm_proxy": {
+        "attack_boundary_recall_simulation_only": 1.0,
+        "benign_boundary_false_positive_rate_simulation_only": 1.0,
+        "fixed_threshold": 0.5,
+        "not_H1_effectiveness_evidence": true,
+        "not_actual_defender_actions": true
+      },
+      "origin": "SYNTHETIC_90_EPISODE_SIDECAR",
+      "overlay": "STATIC",
+      "point_improvement_over_raw_plus_quantity": {
+        "log_loss": 0.008283750212208806,
+        "multiclass_brier": -0.02131087137780406,
+        "stage_accuracy": -0.017857142857142856
+      },
+      "synthetic_overlay_is_independently_trusted": false,
+      "temperature_validation_selected": 3.0,
+      "test_families_improved_fraction": {
+        "log_loss": 0.5,
+        "multiclass_brier": 0.5,
+        "stage_accuracy": 0.16666666666666666
+      },
+      "test_metrics": {
+        "boundaries": 280,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 0.9340343374364989,
+        "multiclass_brier": 0.5317427441525118,
+        "stage_accuracy": 0.6428571428571429
+      },
+      "token_sha256": "f68755c26fb62f1f0b650a5c537a8d1715341e0ca85f88c0e678baae93e3ac6d",
+      "validation_metrics": {
+        "boundaries": 265,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 1.1103349376550358,
+        "multiclass_brier": 0.6121018372311362,
+        "stage_accuracy": 0.6037735849056604
+      }
+    },
+    {
+      "family_cluster_95_interval_improvement": {
+        "log_loss": [
+          0.0,
+          0.0
+        ],
+        "multiclass_brier": [
+          0.0,
+          0.0
+        ],
+        "stage_accuracy": [
+          0.0,
+          0.0
+        ]
+      },
+      "identical_token_signature_to": "STATIC:NONE",
+      "kg_equals_information_matched_flat_all_795_boundaries": true,
+      "mask": "NONE",
+      "name": "STATIC:NONE",
+      "not_a_closed_loop_defender": true,
+      "offline_alarm_proxy": {
+        "attack_boundary_recall_simulation_only": 1.0,
+        "benign_boundary_false_positive_rate_simulation_only": 1.0,
+        "fixed_threshold": 0.5,
+        "not_H1_effectiveness_evidence": true,
+        "not_actual_defender_actions": true
+      },
+      "origin": "SYNTHETIC_90_EPISODE_SIDECAR",
+      "overlay": "DYNAMIC_SYNTHETIC",
+      "point_improvement_over_raw_plus_quantity": {
+        "log_loss": 0.0,
+        "multiclass_brier": 0.0,
+        "stage_accuracy": 0.0
+      },
+      "synthetic_overlay_is_independently_trusted": false,
+      "temperature_validation_selected": 3.0,
+      "test_families_improved_fraction": {
+        "log_loss": 0.0,
+        "multiclass_brier": 0.0,
+        "stage_accuracy": 0.0
+      },
+      "test_metrics": {
+        "boundaries": 280,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 0.9423180876487071,
+        "multiclass_brier": 0.5104318727747076,
+        "stage_accuracy": 0.6607142857142857
+      },
+      "token_sha256": "575de00bd6ba3d9e4744e25b6aa598c2b5c9d6550e570f92f391ab246a3609af",
+      "validation_metrics": {
+        "boundaries": 265,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 1.0443019215088598,
+        "multiclass_brier": 0.572217557487862,
+        "stage_accuracy": 0.6226415094339622
+      }
+    },
+    {
+      "family_cluster_95_interval_improvement": {
+        "log_loss": [
+          0.0,
+          0.0
+        ],
+        "multiclass_brier": [
+          0.0,
+          0.0
+        ],
+        "stage_accuracy": [
+          0.0,
+          0.0
+        ]
+      },
+      "identical_token_signature_to": "STATIC:NONE",
+      "kg_equals_information_matched_flat_all_795_boundaries": true,
+      "mask": "G_ONLY",
+      "name": "STATIC:NONE",
+      "not_a_closed_loop_defender": true,
+      "offline_alarm_proxy": {
+        "attack_boundary_recall_simulation_only": 1.0,
+        "benign_boundary_false_positive_rate_simulation_only": 1.0,
+        "fixed_threshold": 0.5,
+        "not_H1_effectiveness_evidence": true,
+        "not_actual_defender_actions": true
+      },
+      "origin": "SYNTHETIC_90_EPISODE_SIDECAR",
+      "overlay": "DYNAMIC_SYNTHETIC",
+      "point_improvement_over_raw_plus_quantity": {
+        "log_loss": 0.0,
+        "multiclass_brier": 0.0,
+        "stage_accuracy": 0.0
+      },
+      "synthetic_overlay_is_independently_trusted": false,
+      "temperature_validation_selected": 3.0,
+      "test_families_improved_fraction": {
+        "log_loss": 0.0,
+        "multiclass_brier": 0.0,
+        "stage_accuracy": 0.0
+      },
+      "test_metrics": {
+        "boundaries": 280,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 0.9423180876487071,
+        "multiclass_brier": 0.5104318727747076,
+        "stage_accuracy": 0.6607142857142857
+      },
+      "token_sha256": "575de00bd6ba3d9e4744e25b6aa598c2b5c9d6550e570f92f391ab246a3609af",
+      "validation_metrics": {
+        "boundaries": 265,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 1.0443019215088598,
+        "multiclass_brier": 0.572217557487862,
+        "stage_accuracy": 0.6226415094339622
+      }
+    },
+    {
+      "family_cluster_95_interval_improvement": {
+        "log_loss": [
+          -0.0008503137260659815,
+          0.04555239952719862
+        ],
+        "multiclass_brier": [
+          -0.014551817142065557,
+          0.009317942783976014
+        ],
+        "stage_accuracy": [
+          0.0,
+          0.0
+        ]
+      },
+      "identical_token_signature_to": "STATIC:I_ONLY",
+      "kg_equals_information_matched_flat_all_795_boundaries": true,
+      "mask": "I_ONLY",
+      "name": "STATIC:I_ONLY",
+      "not_a_closed_loop_defender": true,
+      "offline_alarm_proxy": {
+        "attack_boundary_recall_simulation_only": 1.0,
+        "benign_boundary_false_positive_rate_simulation_only": 1.0,
+        "fixed_threshold": 0.5,
+        "not_H1_effectiveness_evidence": true,
+        "not_actual_defender_actions": true
+      },
+      "origin": "SYNTHETIC_90_EPISODE_SIDECAR",
+      "overlay": "DYNAMIC_SYNTHETIC",
+      "point_improvement_over_raw_plus_quantity": {
+        "log_loss": 0.02011269145663816,
+        "multiclass_brier": -0.00282292757512128,
+        "stage_accuracy": 0.0
+      },
+      "synthetic_overlay_is_independently_trusted": false,
+      "temperature_validation_selected": 3.0,
+      "test_families_improved_fraction": {
+        "log_loss": 0.6666666666666666,
+        "multiclass_brier": 0.5,
+        "stage_accuracy": 0.0
+      },
+      "test_metrics": {
+        "boundaries": 280,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 0.9222053961920688,
+        "multiclass_brier": 0.5132548003498286,
+        "stage_accuracy": 0.6607142857142857
+      },
+      "token_sha256": "2368ff1bdec6065188f021c31e9c73412c40c54e1d4e34b54a4f058c6bb40db6",
+      "validation_metrics": {
+        "boundaries": 265,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 1.0662109264036688,
+        "multiclass_brier": 0.5877104207457967,
+        "stage_accuracy": 0.6226415094339622
+      }
+    },
+    {
+      "family_cluster_95_interval_improvement": {
+        "log_loss": [
+          -0.2888182507044194,
+          0.08099363720791916
+        ],
+        "multiclass_brier": [
+          -0.09861337485006626,
+          0.03180052237242276
+        ],
+        "stage_accuracy": [
+          0.0,
+          0.0
+        ]
+      },
+      "identical_token_signature_to": null,
+      "kg_equals_information_matched_flat_all_795_boundaries": true,
+      "mask": "T_ONLY",
+      "offline_alarm_proxy": {
+        "attack_boundary_recall_simulation_only": 1.0,
+        "benign_boundary_false_positive_rate_simulation_only": 1.0,
+        "fixed_threshold": 0.5,
+        "not_H1_effectiveness_evidence": true,
+        "not_actual_defender_actions": true
+      },
+      "overlay": "DYNAMIC_SYNTHETIC",
+      "point_improvement_over_raw_plus_quantity": {
+        "log_loss": -0.05840047476770221,
+        "multiclass_brier": -0.021056295391064506,
+        "stage_accuracy": 0.0
+      },
+      "synthetic_overlay_is_independently_trusted": false,
+      "temperature_validation_selected": 3.0,
+      "test_families_improved_fraction": {
+        "log_loss": 0.8333333333333334,
+        "multiclass_brier": 0.6666666666666666,
+        "stage_accuracy": 0.0
+      },
+      "test_metrics": {
+        "boundaries": 280,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 1.0007185624164083,
+        "multiclass_brier": 0.5314881681657719,
+        "stage_accuracy": 0.6607142857142857
+      },
+      "token_sha256": "b8678945d1bc1994564e78384d54291850a1eccea2819d25f1f0596cd981ae92",
+      "validation_metrics": {
+        "boundaries": 265,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 1.1058175611104744,
+        "multiclass_brier": 0.590403164274977,
+        "stage_accuracy": 0.6226415094339622
+      }
+    },
+    {
+      "family_cluster_95_interval_improvement": {
+        "log_loss": [
+          -0.0008503137260659815,
+          0.04555239952719862
+        ],
+        "multiclass_brier": [
+          -0.014551817142065557,
+          0.009317942783976014
+        ],
+        "stage_accuracy": [
+          0.0,
+          0.0
+        ]
+      },
+      "identical_token_signature_to": "STATIC:I_ONLY",
+      "kg_equals_information_matched_flat_all_795_boundaries": true,
+      "mask": "G_I",
+      "name": "STATIC:I_ONLY",
+      "not_a_closed_loop_defender": true,
+      "offline_alarm_proxy": {
+        "attack_boundary_recall_simulation_only": 1.0,
+        "benign_boundary_false_positive_rate_simulation_only": 1.0,
+        "fixed_threshold": 0.5,
+        "not_H1_effectiveness_evidence": true,
+        "not_actual_defender_actions": true
+      },
+      "origin": "SYNTHETIC_90_EPISODE_SIDECAR",
+      "overlay": "DYNAMIC_SYNTHETIC",
+      "point_improvement_over_raw_plus_quantity": {
+        "log_loss": 0.02011269145663816,
+        "multiclass_brier": -0.00282292757512128,
+        "stage_accuracy": 0.0
+      },
+      "synthetic_overlay_is_independently_trusted": false,
+      "temperature_validation_selected": 3.0,
+      "test_families_improved_fraction": {
+        "log_loss": 0.6666666666666666,
+        "multiclass_brier": 0.5,
+        "stage_accuracy": 0.0
+      },
+      "test_metrics": {
+        "boundaries": 280,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 0.9222053961920688,
+        "multiclass_brier": 0.5132548003498286,
+        "stage_accuracy": 0.6607142857142857
+      },
+      "token_sha256": "2368ff1bdec6065188f021c31e9c73412c40c54e1d4e34b54a4f058c6bb40db6",
+      "validation_metrics": {
+        "boundaries": 265,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 1.0662109264036688,
+        "multiclass_brier": 0.5877104207457967,
+        "stage_accuracy": 0.6226415094339622
+      }
+    },
+    {
+      "family_cluster_95_interval_improvement": {
+        "log_loss": [
+          -0.2888182507044194,
+          0.08099363720791916
+        ],
+        "multiclass_brier": [
+          -0.09861337485006626,
+          0.03180052237242276
+        ],
+        "stage_accuracy": [
+          0.0,
+          0.0
+        ]
+      },
+      "identical_token_signature_to": "DYNAMIC_SYNTHETIC:T_ONLY",
+      "kg_equals_information_matched_flat_all_795_boundaries": true,
+      "mask": "G_T",
+      "name": "DYNAMIC_SYNTHETIC:T_ONLY",
+      "not_a_closed_loop_defender": true,
+      "offline_alarm_proxy": {
+        "attack_boundary_recall_simulation_only": 1.0,
+        "benign_boundary_false_positive_rate_simulation_only": 1.0,
+        "fixed_threshold": 0.5,
+        "not_H1_effectiveness_evidence": true,
+        "not_actual_defender_actions": true
+      },
+      "origin": "SYNTHETIC_90_EPISODE_SIDECAR",
+      "overlay": "DYNAMIC_SYNTHETIC",
+      "point_improvement_over_raw_plus_quantity": {
+        "log_loss": -0.05840047476770221,
+        "multiclass_brier": -0.021056295391064506,
+        "stage_accuracy": 0.0
+      },
+      "synthetic_overlay_is_independently_trusted": false,
+      "temperature_validation_selected": 3.0,
+      "test_families_improved_fraction": {
+        "log_loss": 0.8333333333333334,
+        "multiclass_brier": 0.6666666666666666,
+        "stage_accuracy": 0.0
+      },
+      "test_metrics": {
+        "boundaries": 280,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 1.0007185624164083,
+        "multiclass_brier": 0.5314881681657719,
+        "stage_accuracy": 0.6607142857142857
+      },
+      "token_sha256": "b8678945d1bc1994564e78384d54291850a1eccea2819d25f1f0596cd981ae92",
+      "validation_metrics": {
+        "boundaries": 265,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 1.1058175611104744,
+        "multiclass_brier": 0.590403164274977,
+        "stage_accuracy": 0.6226415094339622
+      }
+    },
+    {
+      "family_cluster_95_interval_improvement": {
+        "log_loss": [
+          -0.28735127893203355,
+          0.11132563082316824
+        ],
+        "multiclass_brier": [
+          -0.11186079009720841,
+          0.04052923882031563
+        ],
+        "stage_accuracy": [
+          -0.05263157894736842,
+          0.05172413793103448
+        ]
+      },
+      "identical_token_signature_to": null,
+      "kg_equals_information_matched_flat_all_795_boundaries": true,
+      "mask": "I_T",
+      "offline_alarm_proxy": {
+        "attack_boundary_recall_simulation_only": 0.972972972972973,
+        "benign_boundary_false_positive_rate_simulation_only": 0.9473684210526315,
+        "fixed_threshold": 0.5,
+        "not_H1_effectiveness_evidence": true,
+        "not_actual_defender_actions": true
+      },
+      "overlay": "DYNAMIC_SYNTHETIC",
+      "point_improvement_over_raw_plus_quantity": {
+        "log_loss": -0.04518380971397645,
+        "multiclass_brier": -0.026069465554157033,
+        "stage_accuracy": 0.0
+      },
+      "synthetic_overlay_is_independently_trusted": false,
+      "temperature_validation_selected": 3.0,
+      "test_families_improved_fraction": {
+        "log_loss": 0.6666666666666666,
+        "multiclass_brier": 0.5,
+        "stage_accuracy": 0.16666666666666666
+      },
+      "test_metrics": {
+        "boundaries": 280,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 0.9875018973626832,
+        "multiclass_brier": 0.5365013383288646,
+        "stage_accuracy": 0.6607142857142857
+      },
+      "token_sha256": "ea83683d105362306c6f6e5b394e1f09358569b697431037446d38bc226eeb20",
+      "validation_metrics": {
+        "boundaries": 265,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 1.176405631597162,
+        "multiclass_brier": 0.6200855369219765,
+        "stage_accuracy": 0.6037735849056604
+      }
+    },
+    {
+      "family_cluster_95_interval_improvement": {
+        "log_loss": [
+          -0.28735127893203355,
+          0.11132563082316824
+        ],
+        "multiclass_brier": [
+          -0.11186079009720841,
+          0.04052923882031563
+        ],
+        "stage_accuracy": [
+          -0.05263157894736842,
+          0.05172413793103448
+        ]
+      },
+      "identical_token_signature_to": "DYNAMIC_SYNTHETIC:I_T",
+      "kg_equals_information_matched_flat_all_795_boundaries": true,
+      "mask": "G_I_T",
+      "name": "DYNAMIC_SYNTHETIC:I_T",
+      "not_a_closed_loop_defender": true,
+      "offline_alarm_proxy": {
+        "attack_boundary_recall_simulation_only": 0.972972972972973,
+        "benign_boundary_false_positive_rate_simulation_only": 0.9473684210526315,
+        "fixed_threshold": 0.5,
+        "not_H1_effectiveness_evidence": true,
+        "not_actual_defender_actions": true
+      },
+      "origin": "SYNTHETIC_90_EPISODE_SIDECAR",
+      "overlay": "DYNAMIC_SYNTHETIC",
+      "point_improvement_over_raw_plus_quantity": {
+        "log_loss": -0.04518380971397645,
+        "multiclass_brier": -0.026069465554157033,
+        "stage_accuracy": 0.0
+      },
+      "synthetic_overlay_is_independently_trusted": false,
+      "temperature_validation_selected": 3.0,
+      "test_families_improved_fraction": {
+        "log_loss": 0.6666666666666666,
+        "multiclass_brier": 0.5,
+        "stage_accuracy": 0.16666666666666666
+      },
+      "test_metrics": {
+        "boundaries": 280,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 0.9875018973626832,
+        "multiclass_brier": 0.5365013383288646,
+        "stage_accuracy": 0.6607142857142857
+      },
+      "token_sha256": "ea83683d105362306c6f6e5b394e1f09358569b697431037446d38bc226eeb20",
+      "validation_metrics": {
+        "boundaries": 265,
+        "episodes": 30,
+        "families": 6,
+        "log_loss": 1.176405631597162,
+        "multiclass_brier": 0.6200855369219765,
+        "stage_accuracy": 0.6037735849056604
+      }
+    }
+  ],
+  "schema": "ecpomdg.phase3d3.eight_KG_information_matched_synthetic_ablation.v1",
+  "science_release_ready": false,
+  "statistical_method": "paired family cluster bootstrap on 6 held-out source families, 4000 resamples"
+}

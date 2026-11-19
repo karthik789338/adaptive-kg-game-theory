@@ -1,0 +1,503 @@
+% NOMS 2027: IEEE conference two-column layout.
+% Converted from the supplied Springer LLNCS file; scientific prose untouched.
+% Complete submissions require Noms.images/topo.png, Noms.images/NewArchit.png,
+% and references.bib (not supplied with the original input).
+\documentclass[10pt,conference]{IEEEtran}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{graphicx}
+\usepackage{algorithmic}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{tabularx,array}
+\newtheorem{lma}{Lemma}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\newcommand\scalemath[2]{\scalebox{#1}{\mbox{\ensuremath{\displaystyle #2}}}}
+
+\begin{document}
+
+\title{
+Belief-Adaptive Cyber Deception Against
+Multi-Stage IEC-104 Attacks Using Knowledge Graphs
+\\[0.6em]
+{\normalsize
+\textit{Alternative Title (Draft Only):}\\
+Knowledge-Guided Multi-Stage Cyber Deception Against
+Industroyer-Inspired Attacks on a SPHERE Smart-Grid Testbed
+}
+}
+\maketitle
+
+
+
+\begin{abstract}
+The increasing integration of inverter-based resources (IBRs) into power grids introduces cybersecurity challenges, as adversaries can exploit industrial control protocols to progressively compromise control infrastructure and manipulate power-system operations. Existing defense approaches often rely on static threat assessments or predefined mitigation strategies, limiting their ability to adapt to multi-stage attacks under incomplete information. In this paper, we propose EC-POMDG (Evidence-Conditioned Partially Observable Markov Deception Game), a knowledge-driven, game-theoretic framework for adaptive cyber deception in power-grid industrial control systems. EC-POMDG models attacker--defender interactions as a five-stage stochastic game, where the defender maintains a Bayesian belief over hidden attack stages using IEC 60870-5-104 (IEC-104) telemetry and observation likelihoods informed by cybersecurity, industrial control system, and power-grid topology knowledge graphs. Based on the inferred attack progression and available defense budget, the framework dynamically selects monitoring, decoy activation, attacker redirection, or containment actions. We implement and evaluate EC-POMDG on the SPHERE testbed, integrating real and decoy IEC-104 controllers with an OpenDSS-based IEEE 13-node distribution feeder. Across 1,600 game-policy evaluations, the belief-adaptive defense achieves zero modeled real-asset compromise against both cautious and persistent attacker profiles, compared with compromise rates of 18--81\% for stage-blind defenses. A separate 400-episode live IEC-104 evaluation demonstrates a 0.071 improvement in mean true-stage posterior confidence using static knowledge-graph context, while temporal episode memory provides an additional 0.0194 confidence gain across repeated encounters. Furthermore, 40 controlled physical-impact episodes validate a 200~kW reduction in simulated inverter output under unauthorized curtailment commands. These findings demonstrate the potential of knowledge-informed belief estimation and multi-stage deception for strengthening cyber-physical grid defense.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Cyber deception, partially observable Markov games, knowledge graphs, industrial control systems, IEC 60870-5-104, inverter-based resources, smart-grid cybersecurity.
+\end{IEEEkeywords}
+%\textcolor{red}{Novelity is missing}
+
+\section{Introduction}
+\label{sec:introduction}
+
+The increasing integration of inverter-based resources (IBRs), including solar photovoltaic systems, wind energy systems, and distributed energy resources (DERs), has significantly transformed modern electric power grids \cite{Tuyen2022IBR}. These resources rely on interconnected communication and control infrastructures to support remote monitoring, operational coordination, and power-system regulation. However, the growing dependence on digital control systems introduces cybersecurity vulnerabilities that adversaries can exploit to manipulate grid operations \cite{Zogra2023}. Industrial control protocols, such as IEC 60870-5-104 (IEC-104), facilitate communication between supervisory control and data acquisition (SCADA) systems and field controllers, making them attractive targets for cyber-physical attacks. In particular, sophisticated threats such as Industroyer and Industroyer2 demonstrate how adversaries can exploit industrial communication protocols to issue unauthorized control commands and disrupt power-system operations \cite{mitre2025industroyer2}. Unlike conventional information technology attacks, successful intrusions into IBR control systems can directly influence physical operating conditions, including active-power generation, reactive-power regulation, and voltage stability. Consequently, securing these systems requires defense mechanisms that consider both cyberattack progression and its potential physical consequences.
+
+Existing cybersecurity approaches for industrial control systems (ICSs) have investigated intrusion detection, vulnerability assessment, knowledge-driven threat analysis, and cyber deception to improve the security of critical infrastructure \cite{neupane2025ibr}. Knowledge graphs (KGs) provide structured representations of vulnerabilities, attack techniques, and relationships among interconnected assets, enabling contextual interpretation of cybersecurity events. Similarly, game-theoretic approaches have been investigated to model adversarial interactions and strategically allocate deception resources \cite{horak2019honeypots,neupane2025ransomware}. Although these approaches provide useful capabilities for identifying threats and supporting defensive decisions, integrating multi-stage attack inference with resource-constrained deception remains challenging. In particular, an individual network connection, device interrogation, or control-point read may be insufficient to determine an attacker's actual objective. Furthermore, defense strategies that rely on predetermined activation times or isolated observations may fail to account for the evolving attack stage, the uncertainty associated with incomplete evidence, and the consequences of selecting an inappropriate mitigation action.
+
+These limitations highlight the need for an adaptive cyber-physical defense mechanism that can reason about adversarial behavior under partial observability. Cyberattacks targeting grid control infrastructure typically progress through multiple stages, ranging from reconnaissance and access attempts to device enumeration and unauthorized control manipulation. Previous cyber-physical kill-chain studies similarly emphasize the sequential nature of advanced attacks on power systems \cite{Presekal2024KC}. However, the defender does not directly observe the attacker's internal state or intentions and must instead infer attack progression from incomplete and potentially ambiguous evidence. Moreover, heterogeneous cybersecurity, protocol-level, and power-grid topology information must be correlated to distinguish preliminary probing from activities that may lead to physical consequences. Defensive decisions must also balance attack prevention, deception effectiveness, and limited mitigation resources. Activating a decoy prematurely may consume defensive resources unnecessarily, whereas delaying redirection until unauthorized control execution may expose the real controller to physical manipulation. Therefore, effective defense requires continuous belief estimation and strategic allocation of deception resources according to the inferred attack progression.
+
+To address these challenges, we propose EC-POMDG (Evidence-Conditioned Partially Observable Markov Deception Game), a knowledge-driven, game-theoretic framework for adaptive cyber deception in power-grid ICS environments. EC-POMDG models attacker--defender interactions as a five-stage stochastic game comprising reconnaissance, access, DER enumeration, control manipulation, and physical impact. Since the defender cannot directly observe the underlying attack stage, it maintains a Bayesian belief distribution updated using IEC-104 protocol observations and knowledge-conditioned observation likelihoods. The framework incorporates three complementary knowledge domains: general cybersecurity knowledge, ICS-specific attack semantics, and power-grid component and network topology. Static KG context supports the interpretation of observed attack behavior, while an episode-level temporal memory mechanism incorporates previously observed evidence to refine subsequent belief updates. Based on the resulting belief state and available defense budget, EC-POMDG selects among monitoring, decoy activation, attacker redirection, and containment. This integration enables the defender to adapt its deception strategy to the inferred attack progression rather than relying exclusively on fixed schedules or stage-independent decisions.
+
+The contributions of this work lie in the formulation of a partially observable, multi-stage deception game and the integration of cyber-physical knowledge into belief-conditioned defensive decision-making. The proposed game captures stochastic attack progression, uncertainty regarding the underlying attack stage, and resource-constrained interactions between an attacker and a defender. By incorporating Bayesian belief updates, the defender can continuously estimate attack progression and determine when deception or containment should be employed. Furthermore, the integration of cybersecurity, ICS, and topology knowledge provides semantic context for interpreting protocol observations, while temporal evidence accumulation supports belief refinement across repeated attack encounters. We implement the proposed framework on the SPHERE testbed using real and decoy IEC-104 controllers, trusted telemetry collection, a knowledge-graph infrastructure, and an OpenDSS-based IEEE 13-node distribution feeder. This environment enables the evaluation of both multi-stage deception effectiveness and knowledge-assisted inference, while distinguishing attacks targeting the real controller from interactions with a physically isolated decoy.
+
+We evaluate EC-POMDG through 1,600 game-policy evaluations involving four defender strategies, two attacker profiles, and 200 random seeds per profile-policy configuration. The belief-adaptive strategy achieves zero modeled real-controller compromise against both cautious and persistent attacker profiles, whereas the stage-blind baselines exhibit compromise rates ranging from 18\% to 81\%. In a separate 400-episode live IEC-104 campaign, static KG context improves the mean posterior confidence assigned to the true attack stage by 0.071 compared with telemetry-only inference. Furthermore, the temporally adaptive belief model achieves an additional confidence gain of 0.0194 across repeated encounters. Physical-impact validation using the IEEE 13-node feeder confirms a 200~kW reduction in simulated inverter active-power output under controlled curtailment commands. These findings demonstrate the effectiveness of belief-conditioned deception within the evaluated stochastic game and the potential of semantic and temporal context to improve multi-stage attack inference in cyber-physical environments.
+
+The remainder of this paper is organized as follows. Section~\ref{sec:related_work} reviews existing research on game-theoretic cyber defense, partially observable deception games, and knowledge-graph-assisted ICS security. Section~\ref{sec:system_model} presents the system architecture and threat model. Section~\ref{sec:methodology} describes the EC-POMDG game formulation, Bayesian belief estimation, knowledge-conditioned observation model, and adaptive defense strategy. Section~\ref{sec:evaluation} presents the experimental setup, comparative evaluation, ablation studies, and cyber-physical validation results. Finally, Section~\ref{sec:conclusion} concludes the paper and discusses directions for future work.
+
+
+\section{Related Work}
+\label{sec:related_work}
+
+\subsection{Game-Theoretic Cyber Defense}
+
+Game theory has been widely investigated as a mathematical framework for modeling strategic interactions between attackers and defenders in cyber-physical systems. Lakshminarayana et al. \cite{lakshminarayana2021movingtarget} proposed a game-theoretic moving-target defense mechanism for power grids, where transmission-line reactances are strategically perturbed to detect coordinated cyber-physical attacks while minimizing defense costs. Yao et al. \cite{yao2024bayesianstochastic} developed a hybrid Bayesian-stochastic game for industrial cyber-physical systems that captures cross-layer attack progression and incomplete attacker information, employing multi-agent Bayesian Q-learning to derive defensive strategies. Ni and Paul \cite{ni2019multistage} examined sequential attacker--defender decisions in a multistage smart-grid game, while Feng and Sun \cite{feng2020stochastic} investigated coordinated attacks and honeypot-based defense through a stochastic power-grid game. Hyder and Govindarasu \cite{HyderGame2022} examined cybersecurity resource allocation using attack--defense trees and game theory. Moradi et al. \cite{moradi2022deepqgrid} employed deep Q-learning for stochastic power-grid defense, whereas Shang et al. \cite{shang2025adversarial} studied multistage cyber-physical protection using adversarial game-based learning. More recently, Neupane et al. \cite{neupane2025ransomware} formulated a multi-stage ransomware deception game in which honeypots, honeytokens, and honeyfiles are strategically deployed across different attack stages. Their approach employs backward induction to characterize subgame-perfect equilibrium strategies and evaluate the effectiveness of deception-based defense. These studies demonstrate the applicability of game-theoretic models to cybersecurity resource allocation and adaptive mitigation. However, the integration of protocol-level attack evidence, knowledge-conditioned stage inference, and resource-constrained deception for inverter-based grid control remains comparatively less explored. EC-POMDG addresses this setting by incorporating IEC-104 attack progression and cyber-physical consequences into a partially observable deception game.
+
+\subsection{Partially Observable Deception Games}
+
+Cyber deception has been investigated as an active defense mechanism for misleading adversaries, monitoring malicious behavior, and protecting critical network resources. Horak et al. \cite{horak2019honeypots} formulated dynamic honeypot allocation against lateral movement as a partially observable stochastic game, introducing compact belief representations and incremental strategy generation to improve computational scalability. Hor\'{a}k et al. \cite{HORAK2023103838} subsequently studied solution methods for zero-sum one-sided partially observable stochastic games, providing a formal foundation for reasoning about strategies under asymmetric information. Anwar et al. \cite{anwar2022honeypot} proposed a two-phase deception framework combining proactive honeypot allocation with reactive decisions based on intrusion-detection observations. Their framework models uncertainty through a partially observable Markov decision process and employs Monte Carlo tree search to determine defensive strategies. Khakpour and Parker \cite{khakpour2022partiallyobservablesecuritygamesautomating} formulated partially observable security games for automated attack--defense analysis. Nguyen and Xu \cite{nguyen2022can} analyzed how attacker response models affect the effectiveness of patrol deception in Stackelberg security games. These approaches establish the importance of accounting for incomplete information when adapting deception resources to adversarial behavior. Nevertheless, their primary focus is on network compromise and honeypot allocation rather than the interpretation of industrial control commands and their physical consequences. For distributed energy resources, Johnson et al. \cite{johnson2021derhoneypots} described the design of high-fidelity honeypots and canaries for deceptive monitoring of operational technology. In power-grid environments, similar observations may correspond to different attack stages, and the defender must distinguish device enumeration from unauthorized control manipulation before selecting an appropriate response. EC-POMDG incorporates protocol-derived evidence into Bayesian attack-stage estimation and conditions deception and containment decisions on the resulting belief distribution and remaining defense budget.
+
+\subsection{Knowledge-Graph-Assisted ICS Security}
+
+Knowledge graphs have emerged as an effective means of representing heterogeneous cybersecurity information and supporting contextual threat analysis. Sikos \cite{Sikos2023} surveyed cybersecurity knowledge graphs and their role in integrating and reasoning over heterogeneous security information. Shen et al. \cite{Shen2020} proposed a data-driven cybersecurity knowledge graph for industrial control systems that integrates multi-source threat intelligence with industrial network information through relation extraction. Neupane et al. \cite{neupane2025ibr} introduced CIBR-Fort, a knowledge-driven framework for securing inverter-based resources through threat modeling, knowledge-graph fusion, and mitigation. Their approach combines cybersecurity and power-grid knowledge to identify relationships among vulnerabilities, attacks, and affected components. Nandiya et al. \cite{nandiya2026bridgics} developed BRIDG-ICS, which integrates industrial assets, vulnerabilities, and adversarial behaviors into a unified knowledge graph for multi-stage attack-path analysis and risk assessment. Related cyber--physical monitoring research by M\"{u}ller et al. \cite{muller2024cyphers} investigated event reasoning for identifying attacks against distributed energy resources from operational observations. Complementing graph-based threat modeling, Cerotti et al. \cite{cerotti2025dbn} investigated dynamic Bayesian networks for analyzing cyberattack progression in power systems, demonstrating how attack relationships and monitoring evidence can support probabilistic inference. While these studies advance semantic threat representation and probabilistic attack analysis, the coupling of knowledge-derived observation likelihoods with sequential, budget-constrained deception decisions remains an important research problem. Unlike approaches that primarily use graph relationships for threat identification or attack-path analysis, EC-POMDG incorporates cybersecurity, ICS, and topology context into the observation model of a multi-stage attacker--defender game. It further investigates how accumulated temporal evidence influences Bayesian stage estimation and subsequent defensive actions, enabling a comparative assessment of telemetry-only, static-KG, and temporally adaptive configurations.
+
+
+\section{System and Threat Model}
+\label{sec:system_model}
+
+\subsection{SPHERE Cyber-Physical Architecture}
+
+We consider a distribution-grid industrial control system (ICS) in which supervisory control and data acquisition (SCADA) infrastructure communicates with field controllers responsible for managing inverter-based resources (IBRs). NIST guidance on securing distributed energy resources highlights the importance of protecting communications, monitoring, and control functions in such interconnected environments \cite{mccarthy2022securingder}. The proposed EC-POMDG framework is implemented on the SPHERE testbed, comprising 12 virtual machines interconnected through seven logically separated network segments. The environment includes an attacker, edge and field gateways, SCADA, a historian, real and decoy controllers, a power-grid simulator, a telemetry collector, a knowledge-graph (KG) server, a defender, and an operator node. The network architecture separates the external communication, control-center, operational technology (OT), physical-process, telemetry, and defense networks. This segmentation allows adversarial interactions, controller operations, and defensive observations to be examined independently while preserving the communication relationships required for cyber-physical experimentation. The overall SPHERE cyber-physical testbed
+architecture is illustrated in Fig.~\ref{fig:testbed}.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\columnwidth]
+    {noms_images/ec_pomdg_testbed.jpg}
+    \caption{SPHERE cyber-physical testbed architecture
+    for EC-POMDG, showing the attacker, SCADA
+    infrastructure, real and decoy IEC-104 controllers,
+    power-grid simulator, knowledge-graph infrastructure,
+    and belief-adaptive defender.}
+    \label{fig:testbed}
+\end{figure}
+
+The field-control environment exposes two IEC 60870-5-104 (IEC-104) endpoints representing a real controller and a deceptive controller. Both endpoints support protocol interactions, including connection establishment, general interrogation, information-object reads, and control commands. However, their physical connectivity differs fundamentally. The real controller communicates with an OpenDSS-based IEEE 13-node distribution feeder through a dedicated process network, whereas the decoy emulates controller behavior without a connection to the physical simulation. The feeder includes a controllable photovoltaic inverter connected at bus 675, with active- and reactive-power settings that influence simulated grid operating conditions. Consequently, unauthorized commands directed toward the real controller can alter inverter output and feeder voltages, while corresponding interactions with the decoy produce only emulated responses. This separation enables EC-POMDG to distinguish successful compromise of the protected control process from attacker engagement with a deceptive endpoint.
+
+To support attack observation and defensive decision-making, the testbed incorporates a dedicated telemetry collection and knowledge-management infrastructure. The collector receives IEC-104 protocol events from the controller endpoints and generates operational observations containing event timestamps, protocol operations, information-object addresses, and reported controller measurements. A trusted asset registry associates incoming observations with their corresponding controller identities, allowing the defender to distinguish the protected controller from the decoy without relying on attacker-supplied identity fields. The KG infrastructure maintains three complementary knowledge domains representing general cybersecurity threats, ICS-specific attack techniques, and cyber-physical component topology. These knowledge sources provide contextual information for interpreting protocol events and their relationships to attack progression. The defender consumes the operational observations and available knowledge context to estimate the current attack stage and determine an appropriate defensive response. Experimental ground-truth records, including the actual attack stage and terminal outcome, are maintained separately from the defender's observation interface.
+
+\subsection{Attacker Model and Attack Stages}
+
+We consider an adversary attempting to manipulate the operation of a protected inverter through unauthorized IEC-104 control commands. The attacker is assumed to possess sufficient knowledge of the industrial communication protocol to establish controller sessions, interrogate available information objects, and attempt modifications to controllable inverter parameters. The attack scenario is inspired by the industrial protocol manipulation techniques associated with Industroyer and Industroyer2 \cite{mitre2025industroyer2}. Rather than reproducing the complete malware functionality, we focus on a bounded control-layer attack in which the adversary seeks to curtail inverter active-power generation. The attacker's objective is to reach the real controller and execute an unauthorized control operation that produces a measurable change in the simulated power system. Interactions directed toward the isolated decoy do not satisfy this objective.
+
+The adversarial process is represented by five progression stages: reconnaissance, access, DER enumeration, control manipulation, and physical impact. During reconnaissance, the attacker identifies accessible industrial services and potential controller endpoints. The access stage involves establishing an IEC-104 communication session and interacting with the controller through protocol interrogation. Subsequently, DER enumeration involves reading information objects to identify available measurements and controllable resources. During control manipulation, the attacker prepares and issues commands targeting inverter operating parameters, including the selection and execution of IEC-104 setpoint operations. The physical-impact stage represents the consequences of successful unauthorized command execution against the real controller, such as active-power curtailment and changes in feeder voltage. Although these stages describe the attack's logical progression, the adversary may repeat observations or interactions, encounter defensive deception, or terminate the attack before reaching the physical-impact stage.
+
+To account for differences in adversarial persistence, we consider two attacker profiles, denoted as cautious and persistent. A cautious attacker is more susceptible to deception and may abandon its original target when redirected toward an alternative controller. In contrast, a persistent attacker exhibits a lower probability of successful diversion and is more likely to continue attempting to reach the protected control process. The profiles influence the stochastic outcomes of attacker--defender interactions rather than changing the underlying IEC-104 protocol semantics. We distinguish three terminal outcomes: compromise of the real controller, successful diversion to the decoy, and attacker withdrawal. Compromise represents an unsuccessful defense, whereas diversion and withdrawal prevent the modeled attack from reaching its intended real-controller objective. The corresponding transition probabilities and outcome-dependent rewards are defined in Section~\ref{sec:methodology}.
+
+\subsection{Defender Capabilities and Assumptions}
+
+The defender is responsible for detecting attack progression and strategically deploying deception or containment measures while preserving the protected controller's operational functionality. We assume that the defender has access to trusted asset information, the configured cyber-physical topology, and observations reported through the telemetry infrastructure. However, the attacker progression stage, behavioral profile, and future actions are not directly observable. The defender must therefore infer the likelihood of different attack stages from the sequence of received evidence rather than relying on privileged information about the attacker's internal state. This distinction is essential because identical protocol operations, such as interrogation or information-object reads, may occur during legitimate monitoring as well as adversarial reconnaissance.
+
+The defender operates with a finite defense budget and can select among four actions: monitoring, decoy activation, attacker redirection, and containment. Monitoring maintains observation of the environment without consuming active-defense resources. Decoy activation makes the deceptive controller available for a subsequent defensive interaction, while redirection attempts to divert the attacker away from the protected controller. Containment represents a defensive intervention intended to prevent further progression toward unauthorized control. These actions incur different resource costs and may have different effectiveness depending on the attacker's current stage and behavioral profile. The defender must consequently determine not only which action to employ but also when its expected benefit justifies the associated resource expenditure.
+
+We assume that the decoy remains physically isolated from the real power-grid simulation and that the defender can reliably associate operational observations with registered assets. These assumptions prevent deceptive controller activity from being interpreted as actual physical manipulation and ensure that asset identity is not inferred solely from untrusted protocol payloads. At the same time, trusted asset identification does not reveal the attacker's hidden progression stage. The defender's knowledge is therefore restricted to observable protocol evidence, available cyber-physical context, its previous decisions, and the remaining defense budget. The objective is to minimize successful progression toward unauthorized real-controller manipulation while maximizing effective deception and limiting defensive resource consumption. This setting motivates the partially observable Markov deception game developed in the following section.
+
+
+\section{EC-POMDG: Game Formulation and Defense Methodology}
+\label{sec:methodology}
+
+
+\subsection{Markov Deception Game}
+
+We formulate the interaction between an attacker and a defender as an evidence-conditioned, partially observable Markov deception game (EC-POMDG). The attacker attempts to progressively compromise a protected industrial controller and manipulate inverter operating parameters, while the defender strategically employs deception and containment to prevent unauthorized control of the physical process. Unlike a fully observable stochastic game, the defender does not directly observe the attacker's progression stage or behavioral intentions. Instead, its decisions depend on a probability distribution over possible attack stages, inferred from the sequence of observed IEC-104 events and the available cyber-physical knowledge. Fig.~\ref{fig:game_framework} illustrates the proposed EC-POMDG framework, including the five-stage attack progression, knowledge-conditioned belief estimation, adaptive defense actions, and terminal outcomes. The game is formally represented as
+
+\begin{equation}
+\mathcal{G} =
+\langle \mathcal{S}, \mathcal{A}^{a},
+\mathcal{A}^{d}, \mathcal{O},
+T, Z_{\kappa}, r, b_0, \gamma \rangle,
+\label{eq:game_formulation}
+\end{equation}
+
+\noindent
+where $\mathcal{S}$ denotes the system state space, $\mathcal{A}^{a}$ and $\mathcal{A}^{d}$ represent the attacker and defender action spaces, and $\mathcal{O}$ denotes the observable cyber-physical evidence. The transition kernel $T$ characterizes the stochastic evolution of the game under both players' actions, whereas $Z_{\kappa}$ describes the observation likelihood under knowledge configuration $\kappa$. The reward function $r$ evaluates defensive outcomes and resource expenditure, $b_0$ specifies the initial belief distribution, and $\gamma$ denotes the discount factor in the general sequential-game formulation.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\columnwidth]
+    {noms_images/ec_pomdg_game_1.pdf}
+    \caption{EC-POMDG game formulation and adaptive deception workflow, illustrating five-stage IEC-104 attack progression, KG-conditioned Bayesian belief estimation, defender actions, and terminal outcomes.}
+    \label{fig:game_framework}
+\end{figure}
+
+The game evolves over a finite sequence of decision epochs. At each epoch, the attacker attempts to advance toward unauthorized control, while the defender selects an action based on its current belief and the remaining defense budget. The resulting interaction determines the subsequent attack state, generates observable evidence, and updates the defender's belief. The process continues until the attacker compromises the real controller, is diverted to the decoy, or withdraws. The proposed formulation therefore captures the sequential dependence between attack progression, information uncertainty, defensive intervention, and the resulting cyber-physical outcome.
+
+\subsection{State and Action Spaces}
+
+The underlying game state incorporates the current attack stage, the attacker's selected control target, the physical operating condition, the deception configuration, the remaining defense budget, and the attacker profile. Accordingly, the state at decision epoch $t$ is represented as
+
+\begin{equation}
+s_t = (q_t,\ell_t,x_t,d_t,B_t,\theta),
+\label{eq:state_definition}
+\end{equation}
+
+\noindent
+where $q_t$ represents the hidden attack stage, $\ell_t$ identifies the current real or decoy target, $x_t$ denotes the physical process state, $d_t$ describes the active deception configuration, $B_t$ is the remaining defense budget, and $\theta$ specifies the attacker profile. The attack-stage space consists of five stages,
+
+\begin{equation}
+\mathcal{Q} =
+\{q_{\mathrm{rec}},q_{\mathrm{acc}},
+q_{\mathrm{enum}},q_{\mathrm{ctrl}},
+q_{\mathrm{imp}}\},
+\label{eq:attack_stages}
+\end{equation}
+
+\noindent
+corresponding to reconnaissance, access, DER enumeration, control manipulation, and physical impact, respectively. Successful real-controller compromise, decoy diversion, and attacker withdrawal are represented as terminal outcomes rather than additional progression stages. Although the environment maintains the complete game state, the operational defender primarily estimates the marginal belief over the five attack stages.
+
+The attacker action space encompasses network reconnaissance, IEC-104 session establishment, DER information-object enumeration, control selection, command execution, and continued interaction. These actions represent the progression of an Industroyer-inspired industrial control attack rather than unrestricted arbitrary command execution. The attacker may repeat observations, continue probing, or attempt to progress toward the real controller depending on its behavioral profile and the outcome of earlier interactions.
+
+The defender action space is defined as
+
+\begin{equation}
+\mathcal{A}^{d} =
+\{a_{\mathrm{mon}},a_{\mathrm{dec}},
+a_{\mathrm{red}},a_{\mathrm{con}}\},
+\label{eq:defender_actions}
+\end{equation}
+
+\noindent
+where the actions represent monitoring, decoy activation, attacker redirection, and containment, respectively. Monitoring preserves the current defensive configuration, while decoy activation prepares the isolated controller for deceptive interactions. Redirection attempts to move the attacker from the protected controller to the decoy, whereas containment restricts further progression toward unauthorized real-controller manipulation. The availability of these actions depends on the current defense configuration and remaining resources. In particular, redirection requires an active decoy, and actions that exceed the available defense budget are considered infeasible.
+
+\subsection{Transition and Observation Models}
+
+The state-transition model determines how the attack evolves in response to attacker and defender actions. For consecutive states $s_t$ and $s_{t+1}$, the transition probability is expressed as
+
+\begin{equation}
+T_{\theta}(s_{t+1}\mid s_t,a_t^{a},a_t^{d})
+=
+P(s_{t+1}\mid s_t,a_t^{a},a_t^{d},\theta).
+\label{eq:transition_model}
+\end{equation}
+
+\noindent
+The transition dynamics account for progression through the attack stages, successful or unsuccessful deception, and containment. An attacker that continues interacting with the real controller may progress toward unauthorized control, whereas successful redirection changes the selected target to the decoy. The probability of redirection success depends on the attacker's behavioral profile and the current interaction stage. In the configured stochastic model, cautious attackers have early-stage and control-stage redirection probabilities of 0.80 and 0.55, respectively, while persistent attackers have corresponding probabilities of 0.35 and 0.15. Repeated failed redirections reduce subsequent effectiveness through a configured probability multiplier of 0.60. These probabilities are fixed parameters of the evaluated game and are not re-estimated from incoming observations.
+
+Since the defender does not directly observe the underlying attack stage, it relies on evidence generated by the cyber-physical environment. The observation space includes network reconnaissance, IEC-104 session establishment, general interrogation, DER information-object reads, control selection, command execution, physical-process effects, and periods without relevant activity. These observations are obtained from protocol-level sensors and trusted operational telemetry rather than from privileged attacker-state information.
+
+The observation model specifies the likelihood of receiving evidence $o_t$ for a particular attack stage under knowledge configuration $\kappa$,
+
+\begin{equation}
+Z_{\kappa}(o_t\mid q_t,a_{t-1}^{d})
+=
+P(o_t\mid q_t,a_{t-1}^{d},\kappa).
+\label{eq:observation_model}
+\end{equation}
+
+\noindent
+The knowledge configuration determines how observed protocol behavior is associated with the possible attack stages. For example, repeated information-object reads may support DER enumeration, while a control-selection command provides stronger evidence of control manipulation. The distinction between real and decoy endpoints is obtained from trusted asset identities, preventing decoy command execution from being incorrectly interpreted as a physical impact on the protected grid. The observation model therefore supplies the evidence required for probabilistic attack-stage estimation without directly exposing the environment's hidden state.
+
+\subsection{KG-Conditioned Bayesian Belief Update}
+
+To estimate attack progression under partial observability, EC-POMDG maintains a Bayesian belief distribution over the hidden attack stages. Let $b_t(q)$ denote the probability that the attacker is in stage $q$ given the observations and defender actions available up to decision epoch $t$. The defender updates this distribution whenever new IEC-104 evidence becomes available. Since attacker decisions are not directly exposed to the defender, the belief predictor uses a configured stage-transition model that incorporates the possible attacker actions. The predictive prior is given by
+
+\begin{equation}
+\bar{b}_t(q') =
+\sum_{q\in\mathcal{Q}}
+\bar{T}(q'\mid q,a_{t-1}^{d})b_{t-1}(q),
+\label{eq:belief_prediction}
+\end{equation}
+
+\noindent
+where $\bar{T}$ represents the stage-level transition model used by the belief estimator. After receiving observation $o_t$, the posterior distribution is computed as
+
+\begin{equation}
+b_t(q') =
+\frac{
+Z_{\kappa}(o_t\mid q',a_{t-1}^{d},m_t)
+\bar{b}_t(q')
+}{
+\displaystyle\sum_{q''\in\mathcal{Q}}
+Z_{\kappa}(o_t\mid q'',a_{t-1}^{d},m_t)
+\bar{b}_t(q'')
+}.
+\label{eq:bayesian_belief_update}
+\end{equation}
+
+\noindent
+Here, $m_t$ represents the available temporal evidence memory, which is omitted for memoryless configurations. The normalization ensures that the posterior probabilities over the five attack stages sum to one. The defender subsequently uses this posterior to determine the most likely attack stage and evaluate the need for defensive intervention.
+
+The proposed framework incorporates three complementary knowledge graphs representing general cybersecurity threats, ICS attack semantics, and power-grid component topology. The general cybersecurity graph integrates information from MITRE ATT\&CK, CAPEC, CWE, and known exploited vulnerabilities. The ICS graph represents industrial attack techniques, relevant protocol behaviors, and relationships to the investigated control-manipulation scenario. The topology graph captures cyber assets, network connectivity, trusted controller identities, and the relationship between the real controller and the simulated inverter. Together, these sources provide semantic context for interpreting otherwise ambiguous IEC-104 observations.
+
+We investigate three knowledge configurations, denoted by $\kappa\in\{\mathrm{NO\_KG},\mathrm{STATIC\_KG},\mathrm{DYNAMIC\_KG}\}$. The telemetry-only configuration uses a base observation likelihood $Z_0$, while the KG-assisted configurations modify the stage-evidence association through a knowledge-dependent weighting function. The likelihood contribution is represented as
+
+\begin{equation}
+\widetilde{Z}_{\kappa}(o_t,q') =
+Z_0(o_t\mid q')\,
+\phi_{\kappa}(o_t,q',m_t),
+\label{eq:kg_conditioned_likelihood}
+\end{equation}
+
+\noindent
+where $\phi_{\kappa}$ encodes the additional evidence affinity associated with the selected knowledge configuration. For $\mathrm{NO\_KG}$, the multiplier is unity, so inference depends only on the baseline telemetry likelihood. In $\mathrm{STATIC\_KG}$, the multiplier is derived from calibrated semantic relationships and remains unchanged across repeated encounters. In $\mathrm{DYNAMIC\_KG}$, a temporal-memory component additionally accounts for evidence patterns observed during previous encounters, allowing the likelihood weighting to reflect accumulated attack context. The weighted likelihoods are normalized through the Bayesian update in (\ref{eq:bayesian_belief_update}).
+
+The evaluated dynamic inference configuration employs an episode-level temporal overlay rather than retraining the underlying transition model. The semantic likelihood parameters are calibrated from the knowledge representation and subsequently held fixed, while the temporal component incorporates information retained across encounters. Although the testbed also supports online Neo4j episode storage and retrieval, live graph-query features are not directly incorporated into the evaluated Bayesian likelihood. This distinction separates the measured benefits of semantic and temporal evidence conditioning from the broader graph-management capabilities of the deployed infrastructure.
+
+\subsection{Belief-Adaptive Defense Policy}
+
+The defender selects its actions using the estimated attack-stage distribution, the current deception configuration, and the remaining defense budget. Unlike strategies that activate deception according to predefined time steps, EC-POMDG uses belief-conditioned decisions to determine when the observed evidence provides sufficient support for an intervention. The policy is represented as
+
+\begin{equation}
+a_t^{d} =
+\pi_{\mathrm{BA}}^{d}
+(b_t,d_t,B_t,a_{t-1}^{d}),
+\label{eq:belief_policy}
+\end{equation}
+
+\noindent
+where $\pi_{\mathrm{BA}}^{d}$ denotes the belief-adaptive defender policy. The implemented policy employs calibrated stage-belief thresholds and action-feasibility conditions rather than an explicitly solved equilibrium strategy. During early attack stages, the defender generally continues monitoring to avoid unnecessary resource expenditure. As the belief associated with DER enumeration increases, the defender may activate the decoy in preparation for a subsequent attack interaction. When the estimated control-manipulation risk becomes sufficiently high and the decoy is available, the policy attempts redirection. If a previous redirect fails and the updated belief indicates continued attack progression, containment can be selected as a fallback action, provided sufficient resources remain.
+
+Fig.~\ref{fig:game_tree} illustrates representative defender decision paths under cautious and persistent attacker profiles. Following DER enumeration, the defender determines whether to continue monitoring, activate deception, or employ containment according to its estimated attack-stage belief and available resources. Once the decoy is activated, subsequent observations associated with control manipulation inform the redirection decision. The probability of successful redirection depends on the attacker's behavioral profile and the interaction stage. An unsuccessful redirection may lead to continued attacks against the real controller, while the defender may employ fallback containment when sufficient resources remain. Depending on the resulting attack trajectory, the interaction terminates in real-controller compromise, successful decoy diversion, or attacker withdrawal. The figure presents representative decision paths rather than an exhaustive enumeration of all possible game transitions.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\columnwidth]
+    {noms_images/EC-POMDG_game_tree.pdf}
+    \caption{Representative EC-POMDG game tree illustrating
+    belief-adaptive deception under cautious and persistent
+    attacker profiles, including defender actions, stochastic
+    redirection, and terminal outcomes.}
+    \label{fig:game_tree}
+\end{figure}
+
+This strategy establishes a dependency between accumulated attack evidence and defensive action timing. In particular, the defender can prepare deceptive resources before the attacker reaches unauthorized control execution while retaining containment as a response to unsuccessful diversion. For the live IEC-104 implementation, redirection is applied at an eligible pre-control decision boundary, allowing the subsequent control transaction to be directed toward the selected endpoint without splitting a select-before-operate transaction across different controllers. The resulting action changes the subsequent interaction trajectory, while trusted controller observations determine whether the attacker has reached the real asset or the isolated decoy.
+
+To evaluate the benefit of belief conditioning, the proposed strategy is compared with monitoring-only, fixed-schedule, and stage-agnostic defense policies. The monitoring-only strategy provides a lower-bound reference without active intervention. The fixed-schedule policy activates and redirects deception according to predetermined decision steps, while the stage-agnostic strategy uses reactive actions without conditioning on the Bayesian attack-stage distribution. All active-defense strategies are defined over the same action set and defense-budget constraints, allowing the evaluation to examine how the timing and information basis of defensive decisions influence the resulting attack outcomes.
+
+\subsection{Reward and Resource Constraints}
+
+The objective of the defender is to prevent unauthorized manipulation of the protected controller while limiting the resources consumed by active defensive interventions. We associate each terminal outcome with a corresponding reward and subtract the cumulative cost of the selected defensive actions. The episode return is defined as
+
+\begin{equation}
+R =
+r_{\mathrm{term}}(y)
+-
+\sum_{t=0}^{\tau-1}c(a_t^{d}),
+\label{eq:episode_reward}
+\end{equation}
+
+\noindent
+where $y$ denotes the terminal outcome, $\tau$ is the episode termination step, and $c(a_t^{d})$ is the resource cost of defender action $a_t^{d}$. Compromise of the real controller incurs a large negative terminal reward, whereas successful decoy diversion and attacker withdrawal receive favorable rewards. This formulation encourages the defender to prevent real-controller compromise while avoiding unnecessary defensive expenditure.
+
+The implemented defense-action costs are assigned as $c(a_{\mathrm{mon}})=0$, $c(a_{\mathrm{dec}})=1$, $c(a_{\mathrm{red}})=1$, and $c(a_{\mathrm{con}})=2$. The remaining budget evolves according to
+
+\begin{equation}
+B_{t+1}=B_t-c(a_t^{d}),
+\qquad B_{t+1}\geq 0.
+\label{eq:budget_constraint}
+\end{equation}
+
+\noindent
+An action is admissible only when its resource cost does not exceed the available budget and its operational prerequisites are satisfied. Consequently, the defender cannot repeatedly activate expensive interventions without considering their impact on subsequent decisions. The general sequential decision objective is to maximize expected defensive return under these feasibility constraints,
+
+\begin{equation}
+\max_{\pi^{d}}
+\;\mathbb{E}_{\pi^{a},\pi^{d}}
+\left[
+r_{\mathrm{term}}(y)
+-
+\sum_{t=0}^{\tau-1}c(a_t^{d})
+\right].
+\label{eq:defender_objective}
+\end{equation}
+
+\noindent
+In the evaluated implementation, this objective is approximated through the predefined belief-adaptive decision policy rather than solved through exact equilibrium computation. The game therefore provides a resource-constrained framework for examining how uncertainty-aware action selection affects compromise, diversion, withdrawal, and overall defender utility. The following section evaluates these outcomes under different attacker profiles and investigates the contributions of knowledge-conditioned and temporally adaptive attack-stage inference.
+
+\section{Experimental Evaluation}
+\label{sec:evaluation}
+
+\subsection{Testbed and Experimental Setup}
+
+We evaluate EC-POMDG using the SPHERE cyber-physical testbed described in Section~\ref{sec:system_model}. The experimental environment consists of 12 virtual machines interconnected through seven network segments, including an attacker, real and decoy IEC-104 controllers, a telemetry collector, a knowledge-graph server, a defender, and a power-grid simulation node. The real controller communicates with an OpenDSS-based IEEE 13-node distribution feeder containing a photovoltaic inverter connected at bus 675. The inverter is configured with a nominal active-power setpoint of 400~kW and supports active- and reactive-power control through IEC-104 information objects. The decoy provides corresponding protocol and control interfaces but remains physically isolated from the simulated feeder. This configuration enables the evaluation of deceptive interactions while separately verifying the physical consequences of commands reaching the real controller.
+
+The attacker follows an Industroyer-inspired IEC-104 attack sequence consisting of reconnaissance, access, DER enumeration, control manipulation, and physical impact. Protocol interactions include connection establishment, general interrogation, information-object reads, and select-before-operate control commands. The defender receives these events through a trusted telemetry collection service and maintains a Bayesian belief over the five attack stages. We consider cautious and persistent attacker profiles to capture differences in redirection susceptibility and continued attack progression. The stochastic transition model, observation parameters, and defender action costs remain fixed during evaluation, allowing the effect of defense strategies and knowledge configurations to be compared under consistent experimental conditions.
+
+The knowledge infrastructure consists of three graphs representing general cybersecurity information, ICS attack semantics, and cyber-physical topology. The frozen graphs collectively contain 6,742 nodes and 33,630 relationships. The operational Neo4j deployment additionally supports semantic bridges and episode-level observation records without modifying the frozen graph contents. For the inference experiments, we consider telemetry-only inference (NO-KG), static knowledge-conditioned inference (Static-KG), and knowledge-conditioned inference with temporal episode memory (Dynamic-KG). The static and dynamic configurations use calibrated semantic observation likelihoods, while the dynamic configuration additionally retains evidence from previous attack encounters.
+
+We conduct two primary evaluations. The first uses the frozen five-stage stochastic game engine deployed on the defender node to compare four defense policies across 200 paired random seeds for each attacker profile. This produces 400 distinct attacker-profile/seed conditions, each evaluated under four policies, resulting in 1,600 policy evaluations. The second consists of 400 live IEC-104 attack episodes on SPHERE, from which protocol observations and simulated physical-process measurements are collected. Among these episodes, 40 include controlled physical-impact probes. These evaluations are reported separately because the stochastic game comparisons assess policy effectiveness, whereas the live campaign provides protocol-grounded evidence for knowledge-assisted inference and physical-system validation.
+
+\subsection{Baselines and Evaluation Metrics}
+
+To evaluate the effectiveness of belief-conditioned deception, we compare EC-POMDG against three defense baselines. Monitor-Only observes the attack without active intervention and serves as a lower-bound reference. Fixed-Schedule activates deception and attempts redirection at predefined decision steps, independently of the inferred attack stage. Stage-Agnostic uses reactive deception without conditioning its decisions on the Bayesian stage distribution. In contrast, Belief-Adaptive selects its actions based on the current attack-stage posterior, deception status, and remaining defense budget. The active defense policies share the same available actions and resource constraints, allowing their different decision rules to be examined under matched attacker conditions.
+
+Defense effectiveness is measured using the proportions of episodes terminating in real-controller compromise, decoy diversion, and attacker withdrawal. We additionally report the mean defender reward, which combines the terminal outcome reward with accumulated defensive action costs. A lower compromise rate indicates stronger protection of the real controller, whereas diversion and withdrawal characterize different mechanisms through which the attack is prevented from reaching its objective. All reported rates are computed over completed episodes, and 95\% percentile bootstrap confidence intervals are used for the reported mean rewards.
+
+Knowledge-assisted inference is evaluated using the posterior probability assigned to the ground-truth attack stage. For a set of $N$ labeled observations, the mean true-stage posterior confidence is defined as
+
+\begin{equation}
+C_{\kappa} =
+\frac{1}{N}
+\sum_{i=1}^{N}
+b_{\kappa,i}(q_i^{*}),
+\label{eq:stage_confidence}
+\end{equation}
+
+\noindent
+where $q_i^{*}$ denotes the evaluator-provided attack-stage label and $b_{\kappa,i}$ is the posterior obtained under knowledge configuration $\kappa$. We compare the configurations using paired confidence differences, preserving the same underlying observations across inference methods. To examine the contribution of individual knowledge domains, we additionally employ negative log-likelihood (log-loss), where smaller values indicate greater probability assigned to the correct stage. Physical validation measures the change in simulated inverter active-power output following controlled IEC-104 command execution.
+
+\subsection{Multi-Stage Defense Effectiveness (H1)}
+
+We first investigate whether conditioning defensive actions on the estimated attack stage improves protection against multi-stage adversaries. Table~\ref{tab:h1_results} presents the terminal outcome distribution and mean defender reward for the four policies under cautious and persistent attacker profiles. Each profile-policy configuration is evaluated using 200 stochastic game episodes, with common seeds used to support comparisons across defense policies.
+
+\begin{table*}[t]
+\centering
+\caption{Comparison of Defender Policies Under Cautious and Persistent Attackers}
+\label{tab:h1_results}
+\footnotesize
+\begin{tabular}{llcccc}
+\hline
+\textbf{Attacker} & \textbf{Defender Policy} &
+\textbf{Diversion} & \textbf{Withdrawal} &
+\textbf{Compromise} & \textbf{Mean Reward [95\% CI]} \\
+\hline
+Cautious & Monitor-Only & 0.00 & 0.00 & 1.00 & $-100.00$ [$-100.0$, $-100.0$] \\
+Cautious & Fixed-Schedule & 0.61 & 0.00 & 0.39 & $-25.48$ [$-34.7$, $-16.9$] \\
+Cautious & Stage-Agnostic & 0.82 & 0.00 & 0.18 & $-1.40$ [$-8.6$, $+5.8$] \\
+Cautious & \textbf{Belief-Adaptive} & 0.61 & 0.39 & \textbf{0.00} & $\mathbf{+14.69}$ [$+12.8$, $+16.6$] \\
+\hline
+Persistent & Monitor-Only & 0.00 & 0.00 & 1.00 & $-100.00$ [$-100.0$, $-100.0$] \\
+Persistent & Fixed-Schedule & 0.19 & 0.00 & 0.81 & $-80.92$ [$-87.5$, $-73.0$] \\
+Persistent & Stage-Agnostic & 0.35 & 0.00 & 0.65 & $-61.85$ [$-71.0$, $-52.8$] \\
+Persistent & \textbf{Belief-Adaptive} & 0.19 & 0.81 & \textbf{0.00} & $\mathbf{+2.51}$ [$+0.9$, $+4.1$] \\
+\hline
+\end{tabular}
+\end{table*}
+
+The Monitor-Only policy results in real-controller compromise in every evaluated episode, demonstrating the vulnerability of the modeled control process in the absence of active defense. Fixed-Schedule reduces compromise to 39\% against cautious attackers but exhibits substantially weaker performance against persistent attackers, for which the compromise rate reaches 81\%. Stage-Agnostic improves these outcomes by reducing compromise to 18\% and 65\%, respectively. Nevertheless, its defensive decisions remain insufficient to consistently prevent the attacker from reaching the protected controller.
+
+In contrast, the Belief-Adaptive policy achieves zero observed compromise against both attacker profiles. For cautious attackers, 61\% of episodes terminate in successful decoy diversion, while the remaining 39\% terminate in withdrawal. Against persistent attackers, diversion decreases to 19\%, but withdrawal increases to 81\%, indicating that the strategy relies more heavily on preventing continued progression when deception is unsuccessful. Although Stage-Agnostic achieves a higher diversion rate for cautious attackers, its remaining episodes include successful compromises. This distinction demonstrates that maximizing decoy engagement alone is not equivalent to minimizing the probability of real-controller compromise.
+
+The reward results further illustrate the benefits of belief-conditioned defense. Belief-Adaptive achieves a mean reward of $+14.69$ against cautious attackers and $+2.51$ against persistent attackers, with both reported confidence intervals remaining above zero. In comparison, the stage-blind baselines produce negative mean rewards under both profiles. These findings support H1 within the evaluated stochastic game, demonstrating that conditioning action timing and fallback containment on the inferred attack stage provides stronger protection than the tested fixed-schedule and stage-agnostic strategies.
+
+\subsection{KG-Assisted Stage Inference (H2)}
+
+We next evaluate whether structured cybersecurity knowledge improves inference of the hidden attack stage from observed IEC-104 activity. The 400-episode live campaign provides protocol observations labeled according to the corresponding attack progression stage. To isolate the contribution of static knowledge, the same observations are processed using the NO-KG and Static-KG belief estimators. Table~\ref{tab:h2_stage_results} reports the mean posterior probability assigned to the correct attack stage for each configuration.
+
+\begin{table*}[t]
+\centering
+\caption{Attack-Stage Posterior Confidence With and Without Knowledge-Graph Context}
+\label{tab:h2_stage_results}
+\footnotesize
+\begin{tabular}{lcccccc}
+\hline
+\textbf{Configuration} & \textbf{Recon.} & \textbf{Access} &
+\textbf{DER Enum.} & \textbf{Control} &
+\textbf{Physical Impact} & \textbf{Overall Mean [95\% CI]} \\
+\hline
+NO-KG & 0.269 & 0.186 & 0.731 & 0.624 & 0.300 & 0.450 [0.446, 0.454] \\
+Static-KG & 0.290 & 0.187 & 0.875 & 0.749 & 0.283 & \textbf{0.521} [0.516, 0.525] \\
+\hline
+\end{tabular}
+\end{table*}
+
+The Static-KG configuration increases the overall mean true-stage posterior confidence from 0.450 to 0.521, corresponding to a paired improvement of 0.071, with a 95\% bootstrap confidence interval of [0.070, 0.072]. The improvement is particularly pronounced during DER enumeration and control manipulation, where the posterior confidence increases from 0.731 to 0.875 and from 0.624 to 0.749, respectively. These stages involve protocol operations whose interpretation benefits from explicit relationships among industrial command semantics, information-object addresses, and controllable grid resources.
+
+The results also indicate that semantic context does not improve every stage uniformly. Reconnaissance and access exhibit comparatively small improvements, while physical-impact confidence decreases from 0.300 to 0.283 under Static-KG. This behavior suggests that the calibrated knowledge associations are more informative for identifying enumeration and command manipulation than for distinguishing physical impact from related operational observations. Nevertheless, the positive overall paired difference provides evidence that KG-conditioned observation likelihoods improve attack-stage inference within the evaluated IEC-104 campaign.
+
+\subsection{Temporal KG Adaptation}
+
+To investigate the effect of previously observed attack evidence, we compare Static-KG and Dynamic-KG inference over repeated encounters with the same captured attack trajectories. Each trajectory is processed across three encounters using the corresponding belief estimator. The static configuration uses unchanged semantic likelihood parameters, whereas the dynamic configuration incorporates an episode-level memory of previously observed evidence patterns. Table~\ref{tab:h2_temporal_results} summarizes the resulting true-stage posterior confidence.
+
+\begin{table*}[t]
+\centering
+\caption{True-Stage Posterior Confidence Across Repeated Attack Encounters}
+\label{tab:h2_temporal_results}
+\footnotesize
+\begin{tabular}{lcccc}
+\hline
+\textbf{Configuration} & \textbf{Encounter 1} &
+\textbf{Encounter 2} & \textbf{Encounter 3} &
+\textbf{First-to-Last Gain [95\% CI]} \\
+\hline
+Static-KG & 0.6313 & 0.6313 & 0.6313 &
+$+0.0000$ [$0.000$, $0.000$] \\
+Dynamic-KG & 0.6731 & 0.6874 & 0.6925 &
+$\mathbf{+0.0194}$ [$+0.0192$, $+0.0196$] \\
+\hline
+\end{tabular}
+\end{table*}
+
+Static-KG maintains a constant mean posterior confidence of 0.6313 across all three encounters because its likelihood model does not incorporate previous episode evidence. In contrast, Dynamic-KG increases from 0.6731 during the first encounter to 0.6874 and 0.6925 during the second and third encounters, respectively. The resulting first-to-last improvement is 0.0194, with a 95\% bootstrap confidence interval of [0.0192, 0.0196]. This trend demonstrates that retaining previously observed attack patterns can increase the confidence assigned to the correct stage when similar evidence is encountered again.
+
+The temporal improvement is obtained from the evaluated in-process episode-memory model, which augments fixed semantic likelihood weights. The deployed Neo4j infrastructure separately supports the persistence and retrieval of attack observations through semantic graph relationships. However, live Neo4j retrieval features are not directly supplied to the Bayesian likelihood in this evaluation. Accordingly, the measured improvement establishes the benefit of temporal evidence conditioning rather than an isolated causal advantage of online graph database updates. The distinction is important because the static and dynamic configurations differ in their treatment of previous encounters, while the underlying stochastic attack-transition model remains unchanged.
+
+\subsection{Ablation and Sensitivity Analysis}
+
+We investigate the contribution of each knowledge domain by evaluating combinations of the general cybersecurity (G), ICS attack-semantics (I), and component-topology (T) graphs. The ablation uses 280 held-out stage-inference boundaries and evaluates the posterior estimates using log-loss. Table~\ref{tab:kg_ablation} reports the available configurations, where a positive improvement denotes a reduction in log-loss relative to telemetry-only inference.
+
+\begin{table}[t]
+\centering
+\caption{Knowledge-Graph Ablation Results}
+\label{tab:kg_ablation}
+\scriptsize
+\begin{tabular}{lcc}
+\hline
+\textbf{Knowledge Configuration} &
+\textbf{Log-Loss} & \textbf{Improvement} \\
+\hline
+None & 0.9423 & -- \\
+G only & 0.9423 & $+0.0000$ \\
+I only & \textbf{0.9222} & $\mathbf{+0.0201}$ \\
+T only & 0.9405 & $+0.0018$ \\
+G + I & 0.9222 & $+0.0201$ \\
+I + T & 0.9340 & $+0.0083$ \\
+G + I + T & 0.9340 & $+0.0083$ \\
+\hline
+\end{tabular}
+\end{table}
+
+The ICS knowledge graph produces the largest observed improvement, reducing log-loss from 0.9423 to 0.9222. This indicates that protocol-specific attack semantics provide the most relevant contextual information for the evaluated stage-inference task. In comparison, the general cybersecurity graph produces no measurable improvement when used independently or combined with the ICS graph, reflecting the absence of additional event-specific semantic associations in the evaluated configuration. The topology graph provides a smaller improvement of 0.0018, while combining topology with ICS semantics results in a log-loss of 0.9340, which is higher than the ICS-only configuration. Thus, the contribution of additional graph information depends on its relevance to the observed protocol events rather than the number of knowledge sources included.
+
+The ablation also includes an information-matched negative control in which the relevant evidence is represented without requiring graph structure. This comparison does not establish an independent performance advantage for the graph representation over an equivalent flattened-feature representation. Furthermore, the bootstrap intervals for the reported held-out ablation improvements include zero. Consequently, the results identify ICS semantics as the most promising knowledge source in this experimental setting, but do not establish that graph structure itself is superior to all alternative representations. The available summary contains seven measured configurations; the general-cyber-plus-topology configuration is omitted pending retrieval of its corresponding result.
+
+In a separate defense-budget sensitivity experiment, we evaluate the effect of resource availability on hybrid defensive behavior. With a defense budget of three units, the adaptive hybrid exhibits compromise rates of 19\% and 78\% against cautious and persistent attackers, respectively. Increasing the budget to four units reduces the observed compromise rate to zero for both profiles by allowing the policy to combine deception with fallback containment. The corresponding KG-adaptive and topology-adaptive hybrid configurations produce equivalent outcomes in this experiment. These findings show that successful defense is sensitive to the available intervention budget and that improved semantic inference does not necessarily translate into different terminal outcomes when competing policies select the same actions.
+
+\subsection{Runtime Overhead and Physical Validation}
+
+We examine the operational feasibility of EC-POMDG by considering the delay associated with processing live IEC-104 observations and the physical response of the simulated distribution feeder. The online observation pipeline receives protocol events from the controller sensors, associates them with trusted asset identities, and supplies the corresponding evidence to the defender's belief estimator. A preliminary six-event processing trace records delays ranging from 25.85 to 94.18~ms, with a mean of 42.59~ms. These measurements represent the elapsed interval from collector timestamping to completion of online observation processing for the sampled events, rather than an isolated Bayesian update time or complete decision-to-mitigation latency.
+
+The 400-episode campaign did not independently instrument the Bayesian update, Neo4j commit-and-query operations, and physical actuation intervals. Consequently, the preliminary processing measurements cannot be interpreted as a statistically characterized end-to-end defense latency. In particular, the available samples are insufficient to establish a reliable 95th-percentile response time. A comprehensive runtime assessment requires separate measurements of inference computation, knowledge-graph access, and the interval from evidence acquisition to effective mitigation.
+
+We further validate the physical consequences of unauthorized IEC-104 commands using 40 controlled physical-impact episodes within the live campaign. During each physical-impact probe, the experimental harness initializes the inverter to its nominal 400~kW operating point and issues a curtailment command requesting 200~kW through the real controller. The resulting power change is measured from the OpenDSS-backed plant-service event log before the operating point is restored. Across the 40 probes, the recorded active-power deviation is 200~kW, corresponding to a 50\% reduction from the nominal command setting. These measurements confirm that the control commands can produce the intended physical effect on the simulated feeder.
+
+The real and decoy controller experiments also validate the physical isolation required by the deception mechanism. Control commands delivered to the real controller produce corresponding changes in the grid simulation, whereas equivalent operations directed toward the decoy modify only its emulated state. The physical-impact probes are controlled validation experiments and should not be interpreted as successful compromises occurring during protected defense-policy episodes. Together, these observations establish the cyber-physical relevance of the modeled attack objective and the operational distinction between successful protection, deceptive engagement, and unauthorized real-controller manipulation.
+
+Overall, the evaluation provides evidence for the two principal research hypotheses. Belief-conditioned defense substantially reduces modeled real-controller compromise relative to the evaluated stage-blind policies, while knowledge-conditioned likelihoods improve attack-stage posterior confidence on live IEC-104 observations. Temporal evidence memory provides additional confidence gains across repeated encounters, although these benefits depend on the relevance of the available semantic information and do not independently establish superiority of graph structure over information-matched alternatives. The results therefore demonstrate the effectiveness of the evaluated multi-stage deception framework while identifying opportunities for further improvements in knowledge adaptation, defense-budget robustness, and end-to-end runtime characterization.
+
+
+\section{Conclusion and Future Work}
+\label{sec:conclusion}
+
+In this paper, we presented EC-POMDG, a knowledge-driven, partially observable Markov deception game for adaptive cyber defense in power-grid industrial control systems. The proposed framework models attacker--defender interactions through five stages of attack progression and employs Bayesian belief estimation to guide resource-constrained deception and containment decisions. By integrating IEC-104 protocol observations with general cybersecurity, ICS attack semantics, and cyber-physical topology knowledge, EC-POMDG enables the defender to infer hidden attack progression and adapt its response to evolving threats. We implemented the framework on the SPHERE testbed using real and decoy IEC-104 controllers and an OpenDSS-based IEEE 13-node distribution feeder. Across 1,600 stochastic game-policy evaluations, the belief-adaptive defense achieved zero observed real-controller compromise against both cautious and persistent attacker profiles, outperforming fixed-schedule and stage-agnostic defense strategies. A separate 400-episode live IEC-104 evaluation demonstrated that static knowledge-graph context improved mean true-stage posterior confidence by 0.071 compared with telemetry-only inference, while temporal evidence memory provided an additional 0.0194 confidence gain across repeated encounters. Furthermore, controlled physical-impact experiments confirmed a 200~kW reduction in simulated inverter output under unauthorized curtailment commands. These results demonstrate the benefits of combining multi-stage belief estimation with knowledge-informed deception for protecting cyber-physical control operations.
+
+Future work will investigate the direct integration of dynamically updated knowledge-graph features into the Bayesian observation model, extending the current temporal-memory approach toward online semantic adaptation. We also aim to investigate learning-based defender strategies that optimize deception and containment decisions under varying attacker behaviors, defense budgets, and uncertain transition dynamics. Further evaluation will consider more diverse industrial protocols, coordinated multi-controller attacks, larger distribution networks, and additional inverter-based resources to examine the generalizability of the proposed framework. Finally, comprehensive runtime characterization, including Bayesian inference, knowledge-graph query overhead, and end-to-end mitigation latency, will be investigated to assess the scalability and operational feasibility of EC-POMDG in larger cyber-physical environments.
+
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+\end{document}

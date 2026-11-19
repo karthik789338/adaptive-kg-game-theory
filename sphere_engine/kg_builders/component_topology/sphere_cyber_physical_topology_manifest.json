@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "experiment": "powergridtestbed",
+  "description": "EC-POMDG SPHERE cyber-physical topology",
+  "network_segments": {
+    "attack_access": "10.10.0.0/24",
+    "supervisory": "10.20.0.0/24",
+    "gateway_transit": "10.25.0.0/24",
+    "field_control": "10.30.0.0/24",
+    "physical_process": "10.40.0.0/24",
+    "telemetry": "10.45.0.0/24",
+    "defense": "10.50.0.0/24"
+  },
+  "assets": {
+    "attacker": {
+      "role": "attacker",
+      "interfaces": ["10.10.0.10"]
+    },
+    "collector": {
+      "role": "telemetry_collector",
+      "interfaces": ["10.45.0.30", "10.50.0.20"]
+    },
+    "controller": {
+      "role": "real_controller",
+      "interfaces": ["10.30.0.10", "10.40.0.10"],
+      "trusted_asset_id": "asset-field-001",
+      "physical_grid_connected": true
+    },
+    "decoy": {
+      "role": "decoy_controller",
+      "interfaces": ["10.30.0.99"],
+      "trusted_asset_id": "asset-field-002",
+      "physical_grid_connected": false
+    },
+    "defender": {
+      "role": "defender",
+      "interfaces": ["10.50.0.40"]
+    },
+    "edgegw": {
+      "role": "edge_gateway",
+      "interfaces": [
+        "10.10.0.1",
+        "10.20.0.1",
+        "10.25.0.1",
+        "10.45.0.1"
+      ]
+    },
+    "fieldgw": {
+      "role": "field_gateway",
+      "interfaces": [
+        "10.25.0.2",
+        "10.30.0.1",
+        "10.45.0.20"
+      ]
+    },
+    "gridsim": {
+      "role": "physical_grid_simulator",
+      "interfaces": ["10.40.0.20"]
+    },
+    "historian": {
+      "role": "historian",
+      "interfaces": ["10.20.0.20"]
+    },
+    "kg": {
+      "role": "knowledge_graph_service",
+      "interfaces": ["10.50.0.30"]
+    },
+    "operator": {
+      "role": "human_operator",
+      "interfaces": ["10.50.0.50"]
+    },
+    "scada": {
+      "role": "scada_master",
+      "interfaces": ["10.20.0.10", "10.45.0.10"]
+    }
+  },
+  "services": [
+    {
+      "id": "real-iec104",
+      "asset": "controller",
+      "protocol": "IEC-60870-5-104",
+      "endpoint": "10.30.0.10:2404"
+    },
+    {
+      "id": "decoy-iec104",
+      "asset": "decoy",
+      "protocol": "IEC-60870-5-104",
+      "endpoint": "10.30.0.99:2404"
+    },
+    {
+      "id": "physical-plant-api",
+      "asset": "gridsim",
+      "protocol": "HTTP",
+      "endpoint": "10.40.0.20:8765"
+    },
+    {
+      "id": "telemetry-ingress",
+      "asset": "collector",
+      "protocol": "HTTP",
+      "endpoint": "10.45.0.30:9201"
+    },
+    {
+      "id": "defender-observation-api",
+      "asset": "collector",
+      "protocol": "HTTP",
+      "endpoint": "10.50.0.20:9202"
+    }
+  ],
+  "relationships": [
+    {
+      "source": "scada",
+      "target": "controller",
+      "relation": "communicates_with",
+      "protocol": "IEC-60870-5-104"
+    },
+    {
+      "source": "scada",
+      "target": "decoy",
+      "relation": "communicates_with",
+      "protocol": "IEC-60870-5-104"
+    },
+    {
+      "source": "attacker",
+      "target": "controller",
+      "relation": "experiment_attack_path",
+      "protocol": "IEC-60870-5-104"
+    },
+    {
+      "source": "attacker",
+      "target": "decoy",
+      "relation": "experiment_attack_path",
+      "protocol": "IEC-60870-5-104"
+    },
+    {
+      "source": "controller",
+      "target": "gridsim",
+      "relation": "controls_physical_process",
+      "protocol": "HTTP"
+    },
+    {
+      "source": "controller",
+      "target": "collector",
+      "relation": "publishes_telemetry",
+      "protocol": "HTTP"
+    },
+    {
+      "source": "decoy",
+      "target": "collector",
+      "relation": "publishes_telemetry",
+      "protocol": "HTTP"
+    },
+    {
+      "source": "collector",
+      "target": "defender",
+      "relation": "provides_operational_observations",
+      "protocol": "HTTP"
+    },
+    {
+      "source": "kg",
+      "target": "defender",
+      "relation": "provides_knowledge_context",
+      "protocol": "KG"
+    }
+  ]
+}

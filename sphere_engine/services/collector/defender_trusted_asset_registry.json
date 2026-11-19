@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "registry_owner": "defender",
+  "assets": {
+    "asset-field-001": {
+      "asset_role": "real",
+      "hostname": "controller",
+      "iec104_endpoint": "10.30.0.10:2404",
+      "physical_grid_connected": true
+    },
+    "asset-field-002": {
+      "asset_role": "decoy",
+      "hostname": "decoy",
+      "iec104_endpoint": "10.30.0.99:2404",
+      "physical_grid_connected": false
+    },
+    "asset-scada-001": {
+      "asset_role": "scada",
+      "hostname": "scada",
+      "iec104_endpoint": null,
+      "physical_grid_connected": false
+    },
+    "asset-collector-001": {
+      "asset_role": "collector",
+      "hostname": "collector",
+      "iec104_endpoint": null,
+      "physical_grid_connected": false
+    }
+  }
+}

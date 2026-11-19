@@ -1,0 +1,15 @@
+{
+  "experiment": "H1_live",
+  "mode": "DYNAMIC_KG",
+  "episodes_per_cell": 20,
+  "source": "testbed",
+  "n_records": 160,
+  "n_failures": 0,
+  "policy_outcomes": {
+    "MONITOR_ONLY":    {"n_attack": 20, "n_benign": 20, "decoy_diversion_rate": 0.0, "mean_cost_attack": 0.0, "mean_wasted_cost_benign": 0.0},
+    "FIXED_SCHEDULE":  {"n_attack": 20, "n_benign": 20, "decoy_diversion_rate": 1.0, "mean_cost_attack": 2.0, "mean_wasted_cost_benign": 1.0},
+    "STAGE_AGNOSTIC":  {"n_attack": 20, "n_benign": 20, "decoy_diversion_rate": 1.0, "mean_cost_attack": 2.0, "mean_wasted_cost_benign": 1.0},
+    "BELIEF_ADAPTIVE": {"n_attack": 20, "n_benign": 20, "decoy_diversion_rate": 1.0, "mean_cost_attack": 2.0, "mean_wasted_cost_benign": 1.0}
+  },
+  "note": "physical-impact not measured live (real controller never executes by design)"
+}

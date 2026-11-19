@@ -1,0 +1,76 @@
+{
+  "schema_version": "ecpomdg.semantic_bridges.v1",
+  "phase": "3D.1C",
+  "scope": "Static, calibrated capability links; not live incident assertions or attacker-intent labels",
+  "original_kg_counts": {"nodes": 6742, "relationships": 33630},
+  "calibration_episode": "20261014T032935916667Z_dynamic_kg",
+  "bridge_assertions": [
+    {
+      "bridge_id": "ecpomdg.bridge.v1.controller.general_interrogation",
+      "source_uid": "component_topology::ASSET::controller",
+      "target_uid": "power_grid_ics::BEHAVIOR::general-interrogation",
+      "relation": "CALIBRATED_IEC104_INTERROGATION_CAPABILITY",
+      "evidence_keys": ["real_interrogation"],
+      "meaning": "The SPHERE real controller was observed answering a general interrogation in a calibration episode; no attack intent inferred."
+    },
+    {
+      "bridge_id": "ecpomdg.bridge.v1.controller.process_monitoring",
+      "source_uid": "component_topology::ASSET::controller",
+      "target_uid": "power_grid_ics::BEHAVIOR::process-state-monitoring",
+      "relation": "CALIBRATED_IEC104_POINT_READ_CAPABILITY",
+      "evidence_keys": ["real_three_point_reads"],
+      "meaning": "The real controller supplied trusted observations for IOAs 11, 12 and 13 during calibration; no maliciousness inferred."
+    },
+    {
+      "bridge_id": "ecpomdg.bridge.v1.controller.select_phase",
+      "source_uid": "component_topology::ASSET::controller",
+      "target_uid": "power_grid_ics::BEHAVIOR::select-execute-command",
+      "relation": "CALIBRATED_IEC104_SELECT_PHASE_ONLY",
+      "evidence_keys": ["real_select_only"],
+      "meaning": "The real controller confirmed IEC-104 SELECT in calibration; this does not assert EXECUTE or physical manipulation."
+    },
+    {
+      "bridge_id": "ecpomdg.bridge.v1.decoy.control_transaction",
+      "source_uid": "component_topology::ASSET::decoy",
+      "target_uid": "power_grid_ics::BEHAVIOR::select-execute-command",
+      "relation": "CALIBRATED_DECOY_IEC104_CONTROL_TRANSACTION",
+      "evidence_keys": ["decoy_p_execute_restore"],
+      "meaning": "The isolated decoy completed an authorized IEC-104 control transaction during calibration; it is not a real-grid impact."
+    },
+    {
+      "bridge_id": "ecpomdg.bridge.v1.decoy.active_power_setpoint",
+      "source_uid": "component_topology::ASSET::decoy",
+      "target_uid": "power_grid_ics::BEHAVIOR::active-power-setpoint-manipulation",
+      "relation": "CALIBRATED_DECOY_ACTIVE_POWER_SETPOINT",
+      "evidence_keys": ["decoy_p_execute_restore"],
+      "meaning": "Decoy-side active-power requested values 200 kW then 400 kW were executed during calibration; neither is evidence of real-plant actuation."
+    }
+  ],
+  "unapproved_general_cyber_mappings": {
+    "status": "PENDING_INDEPENDENT_SEMANTIC_REVIEW",
+    "approved_count": 0,
+    "reason": "Name or broad attack-technique similarity is insufficient to justify GeneralCyber-to-ICSCyber or GeneralCyber-to-ComponentTopology edges."
+  },
+  "ablation_feature_masks": [
+    {"name": "NONE", "kg_namespaces": []},
+    {"name": "G_ONLY", "kg_namespaces": ["general_cyber"]},
+    {"name": "I_ONLY", "kg_namespaces": ["power_grid_ics"]},
+    {"name": "T_ONLY", "kg_namespaces": ["component_topology"]},
+    {"name": "G_I", "kg_namespaces": ["general_cyber", "power_grid_ics"]},
+    {"name": "G_T", "kg_namespaces": ["general_cyber", "component_topology"]},
+    {"name": "I_T", "kg_namespaces": ["power_grid_ics", "component_topology"]},
+    {"name": "G_I_T", "kg_namespaces": ["general_cyber", "power_grid_ics", "component_topology"]}
+  ],
+  "planned_comparisons": [
+    "G_I_T_NO_BRIDGES_VS_G_I_T_WITH_APPROVED_BRIDGES",
+    "STATIC_BRIDGED_KG_VS_ONLINE_DYNAMIC_BRIDGED_KG",
+    "DYNAMIC_KG_VS_PROTOCOL_AWARE_NON_KG_BASELINE"
+  ],
+  "guardrails": [
+    "Never mutate :KGNode records or KGNode-to-KGNode relationships.",
+    "Approved static bridges represent calibrated capabilities, not observed behavior in evaluation episodes.",
+    "Future experiments use disjoint episodes from these calibration traces to avoid leakage.",
+    "No current General Cyber links are approved; three-way semantic connectivity remains pending.",
+    "Live episode overlays and dynamic causality are later phases, not supplied by these bridges."
+  ]
+}
